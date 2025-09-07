@@ -1,0 +1,718 @@
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { 
+  faCalendar, 
+  faPlus, 
+  faEdit, 
+  faTrash,
+  faCheck,
+  faTimes,
+  faUserMd,
+  faClock,
+  faMapMarkerAlt,
+  faPhone,
+  faVideo,
+  faFilter,
+  faSearch,
+  faExclamationTriangle,
+  faCheckCircle
+} from '@fortawesome/free-solid-svg-icons';
+import Calendar from 'react-calendar';
+import { motion, AnimatePresence } from 'framer-motion';
+import { format, addDays, isToday, isTomorrow, isYesterday, parseISO } from 'date-fns';
+
+export default function Appointments({ user }) {
+  const [appointments, setAppointments] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingAppointment, setEditingAppointment] = useState(null);
+  const [newAppointment, setNewAppointment] = useState({
+    title: '',
+    provider: '',
+    date: '',
+    time: '',
+    type: 'in-person',
+    location: '',
+    phone: '',
+    notes: '',
+    reminderTime: '15'
+  });
+  const [filterType, setFilterType] = useState('all');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const appointmentTypes = [
+    { value: 'in-person', label: 'In-Person', icon: faUserMd },
+    { value: 'video', label: 'Video Call', icon: faVideo },
+    { value: 'phone', label: 'Phone Call', icon: faPhone }
+  ];
+
+  const commonProviders = [
+    'Dr. Sarah Johnson - Psychiatrist',
+    'Dr. Michael Chen - Therapist',
+    'Dr. Emily Rodriguez - Counselor',
+    'Dr. David Kim - Psychologist',
+    'Dr. Lisa Thompson - Social Worker'
+  ];
+
+  useEffect(() => {
+    // Load appointments (mock data)
+    const mockAppointments = generateMockAppointments();
+    setAppointments(mockAppointments);
+  }, []);
+
+  const generateMockAppointments = () => {
+    const appointments = [];
+    const today = new Date();
+    
+    // Past appointment
+    appointments.push({
+      id: 1,
+      title: 'Therapy Session',
+      provider: 'Dr. Sarah Johnson - Therapist',
+      date: format(addDays(today, -2), 'yyyy-MM-dd'),
+      time: '14:00',
+      type: 'video',
+      location: 'Online',
+      phone: '+1-555-0123',
+      notes: 'Weekly therapy session to discuss anxiety management.',
+      status: 'completed',
+      reminderTime: '15'
+    });
+
+    // Today's appointment
+    appointments.push({
+      id: 2,
+      title: 'Check-up with Psychiatrist',
+      provider: 'Dr. Michael Chen - Psychiatrist',
+      date: format(today, 'yyyy-MM-dd'),
+      time: '10:30',
+      type: 'in-person',
+      location: '123 Mental Health St, Suite 456',
+      phone: '+1-555-0456',
+      notes: 'Medication review and adjustment.',
+      status: 'scheduled',
+      reminderTime: '30'
+    });
+
+    // Future appointments
+    appointments.push({
+      id: 3,
+      title: 'Group Therapy',
+      provider: 'Dr. Emily Rodriguez - Counselor',
+      date: format(addDays(today, 3), 'yyyy-MM-dd'),
+      time: '18:00',
+      type: 'in-person',
+      location: 'Community Center Room 201',
+      phone: '+1-555-0789',
+      notes: 'Weekly group therapy for anxiety support.',
+      status: 'scheduled',
+      reminderTime: '60'
+    });
+
+    appointments.push({
+      id: 4,
+      title: 'Follow-up Session',
+      provider: 'Dr. Sarah Johnson - Therapist',
+      date: format(addDays(today, 7), 'yyyy-MM-dd'),
+      time: '15:30',
+      type: 'video',
+      location: 'Online',
+      phone: '+1-555-0123',
+      notes: 'Follow-up on coping strategies discussed last session.',
+      status: 'scheduled',
+      reminderTime: '15'
+    });
+
+    return appointments;
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAppointment(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    const appointmentData = {
+      ...newAppointment,
+      id: editingAppointment ? editingAppointment.id : Date.now(),
+      status: 'scheduled',
+      createdAt: new Date().toISOString()
+    };
+
+    if (editingAppointment) {
+      setAppointments(prev => prev.map(apt => 
+        apt.id === editingAppointment.id ? appointmentData : apt
+      ));
+    } else {
+      setAppointments(prev => [appointmentData, ...prev]);
+    }
+
+    resetForm();
+  };
+
+  const resetForm = () => {
+    setNewAppointment({
+      title: '',
+      provider: '',
+      date: '',
+      time: '',
+      type: 'in-person',
+      location: '',
+      phone: '',
+      notes: '',
+      reminderTime: '15'
+    });
+    setShowAddForm(false);
+    setEditingAppointment(null);
+  };
+
+  const editAppointment = (appointment) => {
+    setNewAppointment(appointment);
+    setEditingAppointment(appointment);
+    setShowAddForm(true);
+  };
+
+  const deleteAppointment = (appointmentId) => {
+    if (window.confirm('Are you sure you want to cancel this appointment?')) {
+      setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
+    }
+  };
+
+  const markAsCompleted = (appointmentId) => {
+    setAppointments(prev => prev.map(apt => 
+      apt.id === appointmentId ? { ...apt, status: 'completed' } : apt
+    ));
+  };
+
+  const markAsMissed = (appointmentId) => {
+    setAppointments(prev => prev.map(apt => 
+      apt.id === appointmentId ? { ...apt, status: 'missed' } : apt
+    ));
+  };
+
+  const getAppointmentsForDate = (date) => {
+    const dateStr = format(date, 'yyyy-MM-dd');
+    return appointments.filter(apt => apt.date === dateStr);
+  };
+
+  const getUpcomingAppointments = () => {
+    const today = new Date();
+    return appointments
+      .filter(apt => new Date(apt.date) >= today && apt.status === 'scheduled')
+      .sort((a, b) => new Date(a.date) - new Date(b.date))
+      .slice(0, 3);
+  };
+
+  const filteredAppointments = appointments.filter(apt => {
+    const matchesType = filterType === 'all' || apt.type === filterType;
+    const matchesSearch = apt.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         apt.provider.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesType && matchesSearch;
+  });
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case 'completed': return '#4caf50';
+      case 'missed': return '#f44336';
+      case 'cancelled': return '#ff9800';
+      default: return '#2196f3';
+    }
+  };
+
+  const getStatusIcon = (status) => {
+    switch (status) {
+      case 'completed': return faCheckCircle;
+      case 'missed': return faExclamationTriangle;
+      case 'cancelled': return faTimes;
+      default: return faClock;
+    }
+  };
+
+  const formatAppointmentDate = (dateStr) => {
+    const date = parseISO(dateStr);
+    if (isToday(date)) return 'Today';
+    if (isTomorrow(date)) return 'Tomorrow';
+    if (isYesterday(date)) return 'Yesterday';
+    return format(date, 'MMM d, yyyy');
+  };
+
+  const getTypeIcon = (type) => {
+    const typeObj = appointmentTypes.find(t => t.value === type);
+    return typeObj ? typeObj.icon : faUserMd;
+  };
+
+  if (!user) {
+    return (
+      <div className="appointments-page">
+        <div className="container">
+          <div className="auth-required">
+            <FontAwesomeIcon icon={faCalendar} size="3x" />
+            <h2>Please log in to manage your appointments</h2>
+            <p>Schedule and track your mental health appointments</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="appointments-page">
+      <div className="container">
+        <motion.div 
+          className="page-header"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="header-content">
+            <h1>
+              <FontAwesomeIcon icon={faCalendar} />
+              Appointments
+            </h1>
+            <p>Manage your mental health appointments and sessions</p>
+          </div>
+          
+          <button 
+            className="btn btn-primary"
+            onClick={() => setShowAddForm(true)}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            New Appointment
+          </button>
+        </motion.div>
+
+        {/* Quick Overview */}
+        <motion.section 
+          className="appointments-overview"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+        >
+          <div className="overview-cards">
+            <div className="overview-card">
+              <h3>Next Appointment</h3>
+              {getUpcomingAppointments().length > 0 ? (
+                <div className="next-appointment">
+                  <h4>{getUpcomingAppointments()[0].title}</h4>
+                  <p>{formatAppointmentDate(getUpcomingAppointments()[0].date)} at {getUpcomingAppointments()[0].time}</p>
+                  <span className="provider">{getUpcomingAppointments()[0].provider}</span>
+                </div>
+              ) : (
+                <p>No upcoming appointments</p>
+              )}
+            </div>
+
+            <div className="overview-card">
+              <h3>This Month</h3>
+              <div className="month-stats">
+                <div className="stat">
+                  <span className="stat-number">{appointments.filter(apt => apt.status === 'scheduled').length}</span>
+                  <span className="stat-label">Scheduled</span>
+                </div>
+                <div className="stat">
+                  <span className="stat-number">{appointments.filter(apt => apt.status === 'completed').length}</span>
+                  <span className="stat-label">Completed</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="overview-card">
+              <h3>Upcoming</h3>
+              <div className="upcoming-list">
+                {getUpcomingAppointments().slice(0, 2).map(apt => (
+                  <div key={apt.id} className="upcoming-item">
+                    <FontAwesomeIcon icon={getTypeIcon(apt.type)} />
+                    <div>
+                      <span className="apt-title">{apt.title}</span>
+                      <span className="apt-date">{formatAppointmentDate(apt.date)}</span>
+                    </div>
+                  </div>
+                ))}
+                {getUpcomingAppointments().length === 0 && (
+                  <p>No upcoming appointments</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </motion.section>
+
+        <div className="appointments-content">
+          {/* Calendar Section */}
+          <motion.section 
+            className="calendar-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+          >
+            <h2>Calendar View</h2>
+            <div className="calendar-container">
+              <Calendar
+                onChange={setSelectedDate}
+                value={selectedDate}
+                tileContent={({ date, view }) => {
+                  if (view === 'month') {
+                    const dayAppointments = getAppointmentsForDate(date);
+                    if (dayAppointments.length > 0) {
+                      return (
+                        <div className="calendar-appointments">
+                          {dayAppointments.slice(0, 2).map(apt => (
+                            <div 
+                              key={apt.id} 
+                              className="calendar-apt-dot"
+                              style={{ backgroundColor: getStatusColor(apt.status) }}
+                            />
+                          ))}
+                          {dayAppointments.length > 2 && (
+                            <span className="apt-count">+{dayAppointments.length - 2}</span>
+                          )}
+                        </div>
+                      );
+                    }
+                  }
+                  return null;
+                }}
+              />
+            </div>
+
+            {/* Selected Date Appointments */}
+            <div className="selected-date-appointments">
+              <h3>
+                {formatAppointmentDate(format(selectedDate, 'yyyy-MM-dd'))} Appointments
+              </h3>
+              <div className="date-appointments-list">
+                {getAppointmentsForDate(selectedDate).length > 0 ? (
+                  getAppointmentsForDate(selectedDate).map(apt => (
+                    <div key={apt.id} className="date-appointment-item">
+                      <div className="apt-time">{apt.time}</div>
+                      <div className="apt-info">
+                        <h4>{apt.title}</h4>
+                        <p>{apt.provider}</p>
+                      </div>
+                      <div 
+                        className="apt-status"
+                        style={{ color: getStatusColor(apt.status) }}
+                      >
+                        <FontAwesomeIcon icon={getStatusIcon(apt.status)} />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p className="no-appointments">No appointments on this date</p>
+                )}
+              </div>
+            </div>
+          </motion.section>
+
+          {/* Appointments List */}
+          <motion.section 
+            className="appointments-list-section"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            <div className="list-header">
+              <h2>All Appointments</h2>
+              
+              <div className="list-filters">
+                <div className="search-filter">
+                  <FontAwesomeIcon icon={faSearch} />
+                  <input
+                    type="text"
+                    placeholder="Search appointments..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                </div>
+                
+                <select
+                  value={filterType}
+                  onChange={(e) => setFilterType(e.target.value)}
+                  className="type-filter"
+                >
+                  <option value="all">All Types</option>
+                  {appointmentTypes.map(type => (
+                    <option key={type.value} value={type.value}>{type.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="appointments-grid">
+              {filteredAppointments.map((appointment, index) => (
+                <motion.div
+                  key={appointment.id}
+                  className="appointment-card"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: 0.1 * index }}
+                  whileHover={{ y: -2 }}
+                >
+                  <div className="appointment-header">
+                    <div className="apt-main-info">
+                      <h3>{appointment.title}</h3>
+                      <p className="apt-provider">{appointment.provider}</p>
+                    </div>
+                    
+                    <div 
+                      className="apt-status-badge"
+                      style={{ backgroundColor: getStatusColor(appointment.status) }}
+                    >
+                      <FontAwesomeIcon icon={getStatusIcon(appointment.status)} />
+                      <span>{appointment.status}</span>
+                    </div>
+                  </div>
+
+                  <div className="appointment-details">
+                    <div className="apt-datetime">
+                      <FontAwesomeIcon icon={faCalendar} />
+                      <span>{formatAppointmentDate(appointment.date)} at {appointment.time}</span>
+                    </div>
+                    
+                    <div className="apt-type">
+                      <FontAwesomeIcon icon={getTypeIcon(appointment.type)} />
+                      <span>{appointmentTypes.find(t => t.value === appointment.type)?.label}</span>
+                    </div>
+                    
+                    {appointment.location && (
+                      <div className="apt-location">
+                        <FontAwesomeIcon icon={faMapMarkerAlt} />
+                        <span>{appointment.location}</span>
+                      </div>
+                    )}
+                    
+                    {appointment.notes && (
+                      <div className="apt-notes">
+                        <p>"{appointment.notes}"</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="appointment-actions">
+                    {appointment.status === 'scheduled' && (
+                      <>
+                        <button
+                          className="action-btn complete"
+                          onClick={() => markAsCompleted(appointment.id)}
+                          title="Mark as completed"
+                        >
+                          <FontAwesomeIcon icon={faCheck} />
+                        </button>
+                        <button
+                          className="action-btn missed"
+                          onClick={() => markAsMissed(appointment.id)}
+                          title="Mark as missed"
+                        >
+                          <FontAwesomeIcon icon={faTimes} />
+                        </button>
+                      </>
+                    )}
+                    
+                    <button
+                      className="action-btn edit"
+                      onClick={() => editAppointment(appointment)}
+                      title="Edit appointment"
+                    >
+                      <FontAwesomeIcon icon={faEdit} />
+                    </button>
+                    
+                    <button
+                      className="action-btn delete"
+                      onClick={() => deleteAppointment(appointment.id)}
+                      title="Delete appointment"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </motion.section>
+        </div>
+
+        {/* Add/Edit Appointment Modal */}
+        <AnimatePresence>
+          {showAddForm && (
+            <motion.div 
+              className="appointment-modal"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => resetForm()}
+            >
+              <motion.div 
+                className="modal-content"
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="modal-header">
+                  <h2>{editingAppointment ? 'Edit Appointment' : 'New Appointment'}</h2>
+                  <button 
+                    className="close-modal"
+                    onClick={resetForm}
+                  >
+                    <FontAwesomeIcon icon={faTimes} />
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmit} className="appointment-form">
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="title">Appointment Title *</label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={newAppointment.title}
+                        onChange={handleInputChange}
+                        placeholder="e.g., Therapy Session"
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="provider">Provider *</label>
+                      <input
+                        type="text"
+                        id="provider"
+                        name="provider"
+                        value={newAppointment.provider}
+                        onChange={handleInputChange}
+                        placeholder="Dr. Name - Specialty"
+                        list="providers"
+                        required
+                      />
+                      <datalist id="providers">
+                        {commonProviders.map(provider => (
+                          <option key={provider} value={provider} />
+                        ))}
+                      </datalist>
+                    </div>
+                  </div>
+
+                  <div className="form-row">
+                    <div className="form-group">
+                      <label htmlFor="date">Date *</label>
+                      <input
+                        type="date"
+                        id="date"
+                        name="date"
+                        value={newAppointment.date}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="time">Time *</label>
+                      <input
+                        type="time"
+                        id="time"
+                        name="time"
+                        value={newAppointment.time}
+                        onChange={handleInputChange}
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="type">Appointment Type *</label>
+                    <select
+                      id="type"
+                      name="type"
+                      value={newAppointment.type}
+                      onChange={handleInputChange}
+                      required
+                    >
+                      {appointmentTypes.map(type => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="location">Location</label>
+                    <input
+                      type="text"
+                      id="location"
+                      name="location"
+                      value={newAppointment.location}
+                      onChange={handleInputChange}
+                      placeholder="Address or 'Online' for virtual appointments"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="phone">Contact Phone</label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      value={newAppointment.phone}
+                      onChange={handleInputChange}
+                      placeholder="+1-555-0123"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="notes">Notes</label>
+                    <textarea
+                      id="notes"
+                      name="notes"
+                      value={newAppointment.notes}
+                      onChange={handleInputChange}
+                      placeholder="Any additional notes about this appointment..."
+                      rows={3}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label htmlFor="reminderTime">Reminder</label>
+                    <select
+                      id="reminderTime"
+                      name="reminderTime"
+                      value={newAppointment.reminderTime}
+                      onChange={handleInputChange}
+                    >
+                      <option value="0">No reminder</option>
+                      <option value="15">15 minutes before</option>
+                      <option value="30">30 minutes before</option>
+                      <option value="60">1 hour before</option>
+                      <option value="120">2 hours before</option>
+                      <option value="1440">1 day before</option>
+                    </select>
+                  </div>
+
+                  <div className="form-actions">
+                    <button 
+                      type="button" 
+                      className="btn btn-outline"
+                      onClick={resetForm}
+                    >
+                      Cancel
+                    </button>
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary"
+                    >
+                      {editingAppointment ? 'Update Appointment' : 'Schedule Appointment'}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
