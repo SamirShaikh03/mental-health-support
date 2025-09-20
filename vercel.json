@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "buildCommand": "cd front-end && npm install && npm run build",
+  "outputDirectory": "front-end/build",
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}

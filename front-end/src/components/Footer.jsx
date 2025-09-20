@@ -17,7 +17,7 @@ export default function Footer() {
         <div className="footer-section">
           <h3>
             <span className="brand-icon">🧠</span>
-            MindCare
+            WellSetu
           </h3>
           <p>Your trusted companion for mental health and psychological well-being.</p>
           <div className="footer-stats">
@@ -63,7 +63,7 @@ export default function Footer() {
               <FontAwesomeIcon icon={faPhone} />
               <div>
                 <strong>National Suicide Prevention Lifeline</strong>
-                <span>988</span>
+                <span>1800-599-0019</span>
               </div>
             </div>
             <div className="contact">
@@ -77,7 +77,7 @@ export default function Footer() {
               <FontAwesomeIcon icon={faPhone} />
               <div>
                 <strong>Emergency Services</strong>
-                <span>911</span>
+                <span>108</span>
               </div>
             </div>
           </div>
@@ -88,15 +88,15 @@ export default function Footer() {
           <div className="contact-info">
             <div className="contact-item">
               <FontAwesomeIcon icon={faMapMarkerAlt} />
-              <span>123 Mental Health St, Care City, HC 12345</span>
+              <span>Gate 1200, Domkhel Road, Pune 412207</span>
             </div>
             <div className="contact-item">
               <FontAwesomeIcon icon={faPhone} />
-              <span>+1 (555) 123-MIND</span>
+              <span>+91 987654321</span>
             </div>
             <div className="contact-item">
               <FontAwesomeIcon icon={faEnvelope} />
-              <span>support@mindcare.com</span>
+              <span>support@wellsetu.com</span>
             </div>
           </div>
         </div>
@@ -104,7 +104,7 @@ export default function Footer() {
 
       <div className="footer-bottom">
         <div className="footer-container">
-          <p>&copy; 2025 MindCare. All rights reserved. Your mental health matters.</p>
+          <p>&copy; 2025 WellSetu. All rights reserved. Your mental health matters.</p>
           <div className="footer-disclaimer">
             <small>
               <strong>Disclaimer:</strong> MindCare is not a substitute for professional medical advice, 

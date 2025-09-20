@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faBrain, 
@@ -15,6 +16,7 @@ import {
   faHeartbeat,
   faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
+import LanguageSwitcher from './LanguageSwitcher';
 
 /**
  * Navbar Component - Navigation for StudentMind Connect
@@ -29,6 +31,7 @@ import {
  */
 
 function Navbar({ user, onLogout }) {
+  const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const [showUserDropdown, setShowUserDropdown] = useState(false);
@@ -50,18 +53,18 @@ function Navbar({ user, onLogout }) {
 
   // Navigation items for the student mental health system (reduced for space)
   const navigationItems = [
-    { path: '/', label: 'Home', icon: faHome },
-    { path: '/chat', label: 'AI Therapy', icon: faComments },
-    { path: '/screening', label: 'Screening', icon: faClipboardList },
-    { path: '/resources', label: 'Resources', icon: faBookOpen }
+    { path: '/', label: t('nav.home'), icon: faHome },
+    { path: '/chat', label: t('nav.chat'), icon: faComments },
+    { path: '/screening', label: t('nav.screening'), icon: faClipboardList },
+    { path: '/resources', label: t('nav.resources'), icon: faBookOpen }
   ];
 
   // Additional items that appear in user dropdown when logged in
   const userMenuItems = [
-    { path: '/dashboard', label: 'Dashboard', icon: faHeartbeat },
-    { path: '/peer-support', label: 'Peer Forum', icon: faUsers, requireAuth: true },
-    { path: '/appointments', label: 'Counseling', icon: faCalendarAlt, requireAuth: true },
-    { path: '/profile', label: 'Profile', icon: faUser }
+    { path: '/dashboard', label: t('nav.dashboard'), icon: faHeartbeat },
+    { path: '/peer-support', label: t('nav.peerSupport'), icon: faUsers, requireAuth: true },
+    { path: '/appointments', label: t('nav.appointments'), icon: faCalendarAlt, requireAuth: true },
+    { path: '/profile', label: t('nav.profile'), icon: faUser }
   ];
 
   // Admin navigation items
@@ -88,11 +91,11 @@ function Navbar({ user, onLogout }) {
       <div className="navbar-container">
         {/* Brand/Logo Section */}
         <Link to="/" className="navbar-brand">
-          <FontAwesomeIcon icon={faBrain} className="brand-icon" />
-          <div className="brand-text">
-            <span className="brand-name">StudentMind</span>
-            <span className="brand-subtitle">Connect</span>
-          </div>
+          <img 
+            src="/images/nav-logo.svg" 
+            alt="WellSetu Logo" 
+            className="brand-logo"
+          />
         </Link>
 
         {/* Desktop Navigation Menu */}
@@ -113,6 +116,7 @@ function Navbar({ user, onLogout }) {
 
           {/* User Authentication Section */}
           <div className="navbar-auth">
+            <LanguageSwitcher />
             {user ? (
               <div className="user-dropdown" ref={dropdownRef}>
                 <button 
@@ -171,13 +175,13 @@ function Navbar({ user, onLogout }) {
                   to="/login" 
                   className="btn btn-outline"
                 >
-                  Login
+                  {t('nav.login')}
                 </Link>
                 <Link 
                   to="/register" 
                   className="btn btn-primary"
                 >
-                  Sign Up
+                  {t('nav.register')}
                 </Link>
               </div>
             )}

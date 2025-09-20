@@ -73,7 +73,6 @@ mental-health-support/
 ├── src/
 │   ├── components/
 │   │   ├── Navbar.jsx           # Main navigation component
-│   │   ├── Navbar_clean.js      # Clean prototype navbar
 │   │   └── Footer.jsx           # Footer component
 │   ├── pages/
 │   │   ├── Home.jsx             # Landing page
@@ -92,9 +91,7 @@ mental-health-support/
 │   │   ├── ScreeningTest.jsx    # Mental health assessments
 │   │   └── AdminDashboard.jsx   # Admin panel
 │   ├── App.js                   # Main application component
-│   ├── App_clean.js             # Clean prototype version
 │   ├── styles.css               # Main styling
-│   ├── styles_clean.css         # Clean prototype styling
 │   └── index.js                 # Entry point
 ├── package.json
 └── README.md
@@ -133,19 +130,6 @@ The project includes two design versions:
 - Advanced UI components
 - Comprehensive feature set
 - Uses: `App.js`, `Home.jsx`, `Navbar.jsx`, `styles.css`
-
-### 2. **Clean Prototype Version**
-- Minimal, professional design
-- Fast loading without animations
-- Essential features only
-- Uses: `App_clean.js`, `Home_clean.js`, `Navbar_clean.js`, `styles_clean.css`
-
-To switch to the clean version, update `src/index.js`:
-```javascript
-import App from './App_clean';  // Instead of './App'
-```
-
----
 
 ## 🌍 Mental Health Resources
 

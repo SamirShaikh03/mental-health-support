@@ -36,9 +36,6 @@ export default function Chat({ user }) {
     "I'm feeling anxious",
     "I need help with stress",
     "I'm having trouble sleeping",
-    "I feel overwhelmed",
-    "I need motivation",
-    "I'm feeling lonely"
   ];
 
   const therapyTechniques = {
@@ -93,7 +90,14 @@ export default function Chat({ user }) {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    // Add a small delay to ensure DOM is updated
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ 
+        behavior: "smooth",
+        block: "end",
+        inline: "nearest"
+      });
+    }, 100);
   };
 
   const generateResponse = (userMessage) => {
@@ -247,6 +251,12 @@ export default function Chat({ user }) {
       minute: '2-digit'
     });
   };
+
+  // Add this useEffect to prevent initial scroll issues
+  useEffect(() => {
+    // Reset scroll position on component mount
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!user) {
     return (

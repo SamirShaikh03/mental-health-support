@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from 'react-i18next';
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
@@ -16,6 +17,8 @@ import {
 import { motion } from 'framer-motion';
 
 export default function Home({ user }) {
+  const { t } = useTranslation();
+
   const features = [
     {
       icon: faComments,
@@ -40,6 +43,18 @@ export default function Home({ user }) {
       title: "Personal Journal",
       description: "Secure, private journaling with guided prompts and reflection tools",
       link: "/journal"
+    },
+    {
+      icon: faUsers,
+      title: "Peer Support Groups",
+      description: "Connect with others on similar journeys in safe, moderated community spaces",
+      link: "/peer-support"
+    },
+    {
+      icon: faShieldAlt,
+      title: "Crisis Support",
+      description: "Immediate access to emergency resources and crisis intervention when you need it most",
+      link: "/emergency"
     }
   ];
 
@@ -52,17 +67,17 @@ export default function Home({ user }) {
 
   const testimonials = [
     {
-      name: "Sarah M.",
-      text: "MindCare helped me through my darkest moments. The AI therapy sessions feel so natural and supportive.",
+      name: "Arjun K.",
+      text: "WellSetu helped me through my darkest moments. The AI therapy sessions feel so natural and supportive.",
       rating: 5
     },
     {
-      name: "James K.",
+      name: "Priya S.",
       text: "The mood tracking feature has given me incredible insights into my mental health patterns.",
       rating: 5
     },
     {
-      name: "Maria L.",
+      name: "Kavya L.",
       text: "Having 24/7 access to mental health support has been life-changing for my anxiety management.",
       rating: 5
     }
@@ -80,11 +95,11 @@ export default function Home({ user }) {
         <div className="hero-content">
           <div className="hero-text">
             <h1>
-              Your Mental Health Journey Starts Here
+              {t('home.heroTitle')}
+              <span className="hero-accent">{t('home.heroSubtitle')}</span>
             </h1>
             <p className="hero-description">
-              MindCare provides comprehensive mental health support with AI-powered therapy, 
-              mood tracking, and evidence-based tools to help you thrive.
+              {t('home.heroDescription')}
             </p>
             
             {user ? (
@@ -114,7 +129,16 @@ export default function Home({ user }) {
           
           <div className="hero-visual">
             <div className="hero-image">
-              {/* Clean professional background */}
+              <img 
+                src="/images/mental-health-hero.jpg" 
+                alt="Mental Health Support"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  borderRadius: '20px'
+                }}
+              />
             </div>
           </div>
         </div>
@@ -151,7 +175,6 @@ export default function Home({ user }) {
             transition={{ duration: 0.6 }}
           >
             <h2>Comprehensive Mental Health Support</h2>
-            <p>Everything you need to support your mental wellness journey</p>
           </motion.div>
           
           <div className="features-grid">
@@ -190,7 +213,6 @@ export default function Home({ user }) {
             transition={{ duration: 0.6 }}
           >
             <h2>What Our Users Say</h2>
-            <p>Real stories from people who found hope and healing</p>
           </motion.div>
           
           <div className="testimonials-grid">

@@ -1,0 +1,127 @@
+{
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "chat": "AI Therapy",
+    "appointments": "Appointments",
+    "moodTracker": "Mood Tracker",
+    "exercises": "Exercises",
+    "journal": "Journal",
+    "resources": "Resources",
+    "peerSupport": "Peer Support",
+    "emergency": "Emergency",
+    "screening": "Screening",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout",
+    "profile": "Profile",
+    "adminDashboard": "Admin Dashboard"
+  },
+  "home": {
+    "heroTitle": "Your Mental Health Matters",
+    "heroSubtitle": "WellSetu",
+    "heroDescription": "Comprehensive mental health support platform designed specifically for students. Access AI-powered therapy, mood tracking, peer support, and professional resources - all in one secure space.",
+    "getStarted": "Get Started",
+    "learnMore": "Learn More",
+    "statsUsers": "Active Users",
+    "statsTherapists": "Certified Therapists", 
+    "statsSuccess": "Success Rate",
+    "statsSessions": "Sessions Completed",
+    "featuresTitle": "Comprehensive Mental Health Support",
+    "testimonialsTitle": "What Our Users Say",
+    "ctaTitle": "Ready to Start Your Mental Health Journey?",
+    "ctaDescription": "Join thousands of students who have found support and healing through our platform",
+    "joinNow": "Join Now",
+    "contactUs": "Contact Us"
+  },
+  "features": {
+    "aiTherapy": {
+      "title": "AI-Powered Therapy",
+      "description": "24/7 access to empathetic AI counselor trained on evidence-based therapeutic techniques"
+    },
+    "moodTracking": {
+      "title": "Mood Tracking", 
+      "description": "Track your emotional well-being with detailed mood analytics and insights"
+    },
+    "exercises": {
+      "title": "Mental Health Exercises",
+      "description": "Guided meditation, breathing exercises, and cognitive behavioral therapy tools"
+    },
+    "journal": {
+      "title": "Personal Journal",
+      "description": "Secure, private journaling with guided prompts and reflection tools"
+    },
+    "peerSupport": {
+      "title": "Peer Support Groups",
+      "description": "Connect with others on similar journeys in safe, moderated community spaces"
+    },
+    "crisisSupport": {
+      "title": "Crisis Support",
+      "description": "Immediate access to emergency resources and crisis intervention when you need it most"
+    }
+  },
+  "auth": {
+    "loginTitle": "Welcome Back",
+    "loginDescription": "Sign in to continue your mental health journey",
+    "registerTitle": "Create Account",
+    "registerDescription": "Join our supportive community today",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phoneNumber": "Phone Number",
+    "dateOfBirth": "Date of Birth",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot Password?",
+    "loginButton": "Sign In",
+    "registerButton": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "orContinueWith": "Or continue with"
+  },
+  "footer": {
+    "aboutUs": "About StudentMind Connect",
+    "aboutDescription": "StudentMind Connect is a comprehensive mental health platform designed specifically for students, providing accessible, professional, and peer support resources.",
+    "quickLinks": "Quick Links",
+    "support": "Support & Help",
+    "helpCenter": "Help Center",
+    "contactSupport": "Contact Support",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "emergencyContacts": "Emergency Contacts",
+    "nationalSuicidePrevention": "National Suicide Prevention Lifeline",
+    "crisisTextLine": "Crisis Text Line",
+    "localEmergency": "Local Emergency Services",
+    "copyrightText": "© 2024 StudentMind Connect. All rights reserved.",
+    "disclaimer": "StudentMind Connect provides mental health resources and support but is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified health providers with any questions you may have regarding a medical condition. If you are experiencing a mental health emergency, please contact emergency services immediately."
+  },
+  "screening": {
+    "title": "Mental Health Screening Tests",
+    "description": "Take confidential, scientifically-validated assessments to better understand your mental health",
+    "aboutTitle": "About These Screenings",
+    "startTest": "Start Test",
+    "backToSelection": "Back to Test Selection",
+    "nextQuestion": "Next Question",
+    "previousQuestion": "Previous Question",
+    "submitTest": "Submit Test",
+    "question": "Question",
+    "of": "of",
+    "yourScore": "Your Score",
+    "recommendations": "Recommendations"
+  },
+  "resources": {
+    "title": "Mental Health Resources",
+    "searchPlaceholder": "Search resources...",
+    "allCategories": "All Categories",
+    "region": "Region",
+    "videoResources": "Video Resources - Hindi",
+    "audioCategories": {
+      "meditation": "Meditation",
+      "relaxation": "Relaxation", 
+      "focus": "Focus",
+      "sleep": "Sleep"
+    },
+    "foundationInfo": "Foundation Information"
+  }
+}

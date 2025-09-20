@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Import i18n configuration for multilingual support
+import './i18n';
+
 // Import CSS styles
 import './App.css';
 import './styles.css';
@@ -26,6 +29,9 @@ import ScreeningTest from './pages/ScreeningTest.jsx';  // Mental Health Screeni
 // Import styling files
 import './App.css';
 import './styles.css';
+
+// Import i18n configuration
+import './i18n';
 
 function App() {
   // State management for user authentication and loading status
@@ -59,7 +65,7 @@ function App() {
     return (
       <div className="loading-screen">
         <div className="loading-spinner">🧠</div>
-        <h2>StudentMind Connect</h2>
+        <h2>WellSetu</h2>
         <p>Digital Mental Health Support for Students</p>
       </div>
     );

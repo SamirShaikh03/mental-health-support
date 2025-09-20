@@ -294,15 +294,29 @@ export default function ScreeningTest({ user }) {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="info-card">
-            <FontAwesomeIcon icon={faInfoCircle} />
             <div>
-              <h3>About These Screenings</h3>
+              <h3>
+                <FontAwesomeIcon icon={faInfoCircle} style={{ marginRight: "8px", color: "#3498db" }} />
+                About These Screenings
+              </h3>
               <p>These are validated psychological screening tools used by healthcare professionals. They are not diagnostic tools but can help identify if you might benefit from professional support.</p>
-              <ul>
-                <li>✅ Completely anonymous and confidential</li>
-                <li>✅ Based on standardized questionnaires (PHQ-9, GAD-7)</li>
-                <li>✅ Takes only a few minutes to complete</li>
-                <li>✅ Provides immediate results and recommendations</li>
+              <ul className="screening-info-list">
+                <li>
+                  <span role="img" aria-label="correct">✅</span>
+                  Your info here...
+                </li>
+                <li>
+                  <span role="img" aria-label="correct">✅</span>
+                  Based on standardized questionnaires (PHQ-9, GAD-7)
+                </li>
+                <li>
+                  <span role="img" aria-label="correct">✅</span>
+                  Takes only a few minutes to complete
+                </li>
+                <li>
+                  <span role="img" aria-label="correct">✅</span>
+                  Provides immediate results and recommendations
+                </li>
               </ul>
             </div>
           </div>
