@@ -1,4 +1,4 @@
-# 🧠 StudentMind Connect
+# 🧠 Well Setu - A Digital Mental Health Support
 
 **A Comprehensive Digital Mental Health Support Platform for Students**
 
