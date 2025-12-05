@@ -100,7 +100,8 @@ export default function Register({ onLogin }) {
         emergencyContact: formData.emergencyContact,
         emergencyPhone: formData.emergencyPhone,
         joinDate: new Date().toISOString(),
-        avatar: `https://ui-avatars.com/api/?name=${formData.firstName}+${formData.lastName}&background=0077b6&color=fff`
+        avatar: `https://ui-avatars.com/api/?name=${formData.firstName}+${formData.lastName}&background=0077b6&color=fff`,
+        role: 'student'
       };
       
       onLogin(userData);
@@ -122,8 +123,8 @@ export default function Register({ onLogin }) {
           transition={{ duration: 0.6 }}
         >
           <div className="auth-header">
-            <h1>Join MindCare</h1>
-            <p>Start your mental wellness journey today</p>
+            <h1>Craft Your WellSetu Path</h1>
+            <p>Create an account to track your wellbeing rituals and connect with support.</p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">

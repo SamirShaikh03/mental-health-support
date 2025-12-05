@@ -23,6 +23,7 @@ import Resources from './pages/Resources.jsx';          // Psychoeducational Res
 import PeerSupport from './pages/PeerSupport.jsx';      // Peer Support Platform
 import Appointments from './pages/Appointments.jsx';    // Confidential Booking System
 import AdminDashboard from './pages/AdminDashboard.jsx'; // Admin Dashboard with Analytics
+import CounselorPortal from './pages/CounselorPortal.jsx';
 import Profile from './pages/Profile.jsx';
 import ScreeningTest from './pages/ScreeningTest.jsx';  // Mental Health Screening Tools
 
@@ -60,6 +61,23 @@ function App() {
     localStorage.removeItem('studentmind_user');
   };
 
+  const redirectForRole = () => {
+    if (!user) return '/login';
+    if (user.role === 'admin') return '/admin';
+    if (user.role === 'counselor') return '/counselor';
+    return '/dashboard';
+  };
+
+  const renderProtected = (element, allowedRoles = null) => {
+    if (!user) {
+      return <Navigate to="/login" replace />;
+    }
+    if (allowedRoles && !allowedRoles.includes(user.role)) {
+      return <Navigate to={redirectForRole()} replace />;
+    }
+    return element;
+  };
+
   // Show loading screen while checking authentication
   if (isLoading) {
     return (
@@ -84,18 +102,19 @@ function App() {
             <Route path="/" element={<Home user={user} />} />
             <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login onLogin={login} />} />
             <Route path="/register" element={user ? <Navigate to="/dashboard" /> : <Register onLogin={login} />} />
-            <Route path="/resources" element={<Resources />} />
-            <Route path="/screening" element={<ScreeningTest user={user} />} />
+            <Route path="/resources" element={renderProtected(<Resources user={user} />)} />
+            <Route path="/screening" element={renderProtected(<ScreeningTest user={user} />)} />
             
             {/* Protected routes - require user authentication */}
-            <Route path="/dashboard" element={user ? <Dashboard user={user} /> : <Navigate to="/login" />} />
-            <Route path="/chat" element={user ? <Chat user={user} /> : <Navigate to="/login" />} />
-            <Route path="/peer-support" element={user ? <PeerSupport user={user} /> : <Navigate to="/login" />} />
-            <Route path="/appointments" element={user ? <Appointments user={user} /> : <Navigate to="/login" />} />
-            <Route path="/profile" element={user ? <Profile user={user} /> : <Navigate to="/login" />} />
+            <Route path="/dashboard" element={renderProtected(<Dashboard user={user} />)} />
+            <Route path="/chat" element={renderProtected(<Chat user={user} />)} />
+            <Route path="/peer-support" element={renderProtected(<PeerSupport user={user} />)} />
+            <Route path="/appointments" element={renderProtected(<Appointments user={user} />)} />
+            <Route path="/profile" element={renderProtected(<Profile user={user} />)} />
             
-            {/* Admin route - for institutional administrators */}
-            <Route path="/admin" element={user ? <AdminDashboard user={user} /> : <Navigate to="/login" />} />
+            {/* Role-specific workspaces */}
+            <Route path="/admin" element={renderProtected(<AdminDashboard user={user} />, ['admin'])} />
+            <Route path="/counselor" element={renderProtected(<CounselorPortal user={user} />, ['counselor'])} />
           </Routes>
         </main>
         

@@ -215,6 +215,30 @@ export default function Appointments({ user }) {
     return matchesType && matchesSearch;
   });
 
+  const upcomingAppointments = getUpcomingAppointments();
+  const appointmentsForSelectedDate = getAppointmentsForDate(selectedDate);
+  const nextAppointment = upcomingAppointments[0];
+  const reminderCopy = {
+    '0': 'No reminder scheduled',
+    '15': 'Reminder set • 15 minutes before',
+    '30': 'Reminder set • 30 minutes before',
+    '60': 'Reminder set • 1 hour before',
+    '120': 'Reminder set • 2 hours before',
+    '1440': 'Reminder set • 1 day before'
+  };
+
+  const getReminderDescription = (value) => reminderCopy[value] || `Reminder set • ${value} minutes before`;
+
+  const scheduledCount = appointments.filter(apt => apt.status === 'scheduled').length;
+  const completedCount = appointments.filter(apt => apt.status === 'completed').length;
+  const missedCount = appointments.filter(apt => apt.status === 'missed').length;
+  const uniqueProviders = [...new Set(appointments.map(apt => apt.provider))];
+  const focusAppointments = upcomingAppointments.slice(0, 2);
+  const reminderDescription = nextAppointment
+    ? getReminderDescription(nextAppointment.reminderTime)
+    : 'Add reminders so we can nudge you ahead of each session.';
+  const providerPreview = uniqueProviders.slice(0, 3);
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed': return '#4caf50';
@@ -269,21 +293,53 @@ export default function Appointments({ user }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="header-content">
-            <h1>
-              <FontAwesomeIcon icon={faCalendar} />
-              Appointments
-            </h1>
-            <p>Manage your mental health appointments and sessions</p>
+          <div className="header-top">
+            <div className="header-copy">
+              <p className="header-eyebrow">Care planner</p>
+              <h1>
+                <FontAwesomeIcon icon={faCalendar} className="header-icon" />
+                Appointments
+              </h1>
+              <p>Keep every session aligned with your routine and surface what needs attention next.</p>
+            </div>
+
+            <motion.button 
+              className="btn btn-primary"
+              onClick={() => setShowAddForm(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FontAwesomeIcon icon={faPlus} />
+              New Appointment
+            </motion.button>
           </div>
-          
-          <button 
-            className="btn btn-primary"
-            onClick={() => setShowAddForm(true)}
-          >
-            <FontAwesomeIcon icon={faPlus} />
-            New Appointment
-          </button>
+
+          <div className="header-metrics">
+            <div className="metric-card">
+              <FontAwesomeIcon icon={faClock} />
+              <div>
+                <span>Next session</span>
+                <strong>{nextAppointment ? `${formatAppointmentDate(nextAppointment.date)} • ${nextAppointment.time}` : 'No upcoming sessions'}</strong>
+              </div>
+            </div>
+            <div className="metric-card">
+              <FontAwesomeIcon icon={faCheckCircle} />
+              <div>
+                <span>Completed</span>
+                <strong>{completedCount}</strong>
+              </div>
+            </div>
+            <div className="metric-card">
+              <FontAwesomeIcon icon={faUserMd} />
+              <div>
+                <span>Care team</span>
+                <strong>{uniqueProviders.length || 0} {uniqueProviders.length === 1 ? 'provider' : 'providers'}</strong>
+                {providerPreview.length > 0 && (
+                  <p className="metric-subtext">{providerPreview.join(' • ')}</p>
+                )}
+              </div>
+            </div>
+          </div>
         </motion.div>
 
         {/* Quick Overview */}
@@ -294,49 +350,64 @@ export default function Appointments({ user }) {
           transition={{ duration: 0.6, delay: 0.1 }}
         >
           <div className="overview-cards">
-            <div className="overview-card">
-              <h3>Next Appointment</h3>
-              {getUpcomingAppointments().length > 0 ? (
-                <div className="next-appointment">
-                  <h4>{getUpcomingAppointments()[0].title}</h4>
-                  <p>{formatAppointmentDate(getUpcomingAppointments()[0].date)} at {getUpcomingAppointments()[0].time}</p>
-                  <span className="provider">{getUpcomingAppointments()[0].provider}</span>
-                </div>
+            <div className="overview-card snapshot-card">
+              <div className="snapshot-header">
+                <h3>Next session</h3>
+                {nextAppointment && (
+                  <span className="snapshot-pill">
+                    {appointmentTypes.find(t => t.value === nextAppointment.type)?.label}
+                  </span>
+                )}
+              </div>
+              {nextAppointment ? (
+                <>
+                  <p className="snapshot-eyebrow">{formatAppointmentDate(nextAppointment.date)} • {nextAppointment.time}</p>
+                  <h4 className="snapshot-title">{nextAppointment.title}</h4>
+                  <p className="snapshot-subtext">{nextAppointment.provider}</p>
+                  <div className="snapshot-meta">
+                    <FontAwesomeIcon icon={faMapMarkerAlt} />
+                    <span>{nextAppointment.location || 'Location shared upon confirmation'}</span>
+                  </div>
+                </>
               ) : (
-                <p>No upcoming appointments</p>
+                <p className="snapshot-empty">You have no upcoming sessions scheduled.</p>
               )}
             </div>
 
-            <div className="overview-card">
-              <h3>This Month</h3>
-              <div className="month-stats">
-                <div className="stat">
-                  <span className="stat-number">{appointments.filter(apt => apt.status === 'scheduled').length}</span>
-                  <span className="stat-label">Scheduled</span>
+            <div className="overview-card snapshot-card">
+              <h3>Progress snapshot</h3>
+              <div className="snapshot-stat-grid">
+                <div>
+                  <span>Scheduled</span>
+                  <strong>{scheduledCount}</strong>
                 </div>
-                <div className="stat">
-                  <span className="stat-number">{appointments.filter(apt => apt.status === 'completed').length}</span>
-                  <span className="stat-label">Completed</span>
+                <div>
+                  <span>Completed</span>
+                  <strong>{completedCount}</strong>
+                </div>
+                <div>
+                  <span>Missed</span>
+                  <strong>{missedCount}</strong>
                 </div>
               </div>
+              <p className="snapshot-subtext">A clear view of where the month stands so far.</p>
             </div>
 
-            <div className="overview-card">
-              <h3>Upcoming</h3>
-              <div className="upcoming-list">
-                {getUpcomingAppointments().slice(0, 2).map(apt => (
-                  <div key={apt.id} className="upcoming-item">
-                    <FontAwesomeIcon icon={getTypeIcon(apt.type)} />
-                    <div>
-                      <span className="apt-title">{apt.title}</span>
-                      <span className="apt-date">{formatAppointmentDate(apt.date)}</span>
-                    </div>
-                  </div>
-                ))}
-                {getUpcomingAppointments().length === 0 && (
-                  <p>No upcoming appointments</p>
+            <div className="overview-card snapshot-card">
+              <h3>Care reminders</h3>
+              <p className="snapshot-eyebrow">{reminderDescription}</p>
+              <ul className="snapshot-list">
+                {focusAppointments.length > 0 ? (
+                  focusAppointments.map(apt => (
+                    <li key={apt.id}>
+                      <strong>{formatAppointmentDate(apt.date)}</strong>
+                      <span>{apt.title}</span>
+                    </li>
+                  ))
+                ) : (
+                  <li>We'll highlight preparation steps once new sessions are booked.</li>
                 )}
-              </div>
+              </ul>
             </div>
           </div>
         </motion.section>
@@ -385,8 +456,8 @@ export default function Appointments({ user }) {
                 {formatAppointmentDate(format(selectedDate, 'yyyy-MM-dd'))} Appointments
               </h3>
               <div className="date-appointments-list">
-                {getAppointmentsForDate(selectedDate).length > 0 ? (
-                  getAppointmentsForDate(selectedDate).map(apt => (
+                {appointmentsForSelectedDate.length > 0 ? (
+                  appointmentsForSelectedDate.map(apt => (
                     <div key={apt.id} className="date-appointment-item">
                       <div className="apt-time">{apt.time}</div>
                       <div className="apt-info">
@@ -496,36 +567,36 @@ export default function Appointments({ user }) {
                     {appointment.status === 'scheduled' && (
                       <>
                         <button
-                          className="action-btn complete"
+                          className="appointment-chip is-positive"
                           onClick={() => markAsCompleted(appointment.id)}
-                          title="Mark as completed"
                         >
                           <FontAwesomeIcon icon={faCheck} />
+                          <span>Mark done</span>
                         </button>
                         <button
-                          className="action-btn missed"
+                          className="appointment-chip is-neutral"
                           onClick={() => markAsMissed(appointment.id)}
-                          title="Mark as missed"
                         >
                           <FontAwesomeIcon icon={faTimes} />
+                          <span>Mark missed</span>
                         </button>
                       </>
                     )}
-                    
+
                     <button
-                      className="action-btn edit"
+                      className="appointment-chip"
                       onClick={() => editAppointment(appointment)}
-                      title="Edit appointment"
                     >
                       <FontAwesomeIcon icon={faEdit} />
+                      <span>Edit</span>
                     </button>
-                    
+
                     <button
-                      className="action-btn delete"
+                      className="appointment-chip is-danger"
                       onClick={() => deleteAppointment(appointment.id)}
-                      title="Delete appointment"
                     >
                       <FontAwesomeIcon icon={faTrash} />
+                      <span>Delete</span>
                     </button>
                   </div>
                 </motion.div>

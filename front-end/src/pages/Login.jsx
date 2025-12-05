@@ -7,15 +7,40 @@ import {
   faEye, 
   faEyeSlash,
   faGlobe,
-  faShare
+  faShare,
+  faUserGraduate,
+  faShieldHalved,
+  faHandHoldingHeart
 } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
+
+const roleOptions = [
+  {
+    value: 'student',
+    label: 'Student',
+    icon: faUserGraduate,
+    blurb: 'Full access to personal wellness tools and trackers.'
+  },
+  {
+    value: 'counselor',
+    label: 'Peer Counselor',
+    icon: faHandHoldingHeart,
+    blurb: 'Guide cohorts, review check-ins, and facilitate circles.'
+  },
+  {
+    value: 'admin',
+    label: 'Admin',
+    icon: faShieldHalved,
+    blurb: 'Monitor analytics and manage institute-wide programs.'
+  }
+];
 
 export default function Login({ onLogin }) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    rememberMe: false
+    rememberMe: false,
+    role: 'student'
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -72,11 +97,13 @@ export default function Login({ onLogin }) {
         age: 25,
         location: "New York, NY",
         joinDate: new Date().toISOString(),
-        avatar: `https://ui-avatars.com/api/?name=Demo+User&background=0077b6&color=fff`
+        avatar: `https://ui-avatars.com/api/?name=Demo+User&background=0077b6&color=fff`,
+        role: formData.role
       };
       
       onLogin(userData);
-      navigate('/dashboard');
+      const destination = formData.role === 'admin' ? '/admin' : formData.role === 'counselor' ? '/counselor' : '/dashboard';
+      navigate(destination);
     } catch (error) {
       setErrors({ submit: 'Invalid email or password. Please try again.' });
     } finally {
@@ -93,7 +120,8 @@ export default function Login({ onLogin }) {
       age: 25,
       location: "New York, NY",
       joinDate: new Date().toISOString(),
-      avatar: `https://ui-avatars.com/api/?name=${provider}+User&background=0077b6&color=fff`
+      avatar: `https://ui-avatars.com/api/?name=${provider}+User&background=0077b6&color=fff`,
+      role: 'student'
     };
     
     onLogin(userData);
@@ -110,8 +138,37 @@ export default function Login({ onLogin }) {
           transition={{ duration: 0.6 }}
         >
           <div className="auth-header">
-            <h1>Welcome Back</h1>
-            <p>Sign in to continue your mental wellness journey</p>
+            <h1>Step Back Into Balance</h1>
+            <p>Sign in to unlock your daily reflections, counselor notes, and support spaces.</p>
+          </div>
+
+          <div className="role-selector">
+            <p className="role-selector-label">Sign in as</p>
+            <div className="role-options">
+              {roleOptions.map((option) => (
+                <label
+                  key={option.value}
+                  className={`role-option ${formData.role === option.value ? 'selected' : ''}`}
+                >
+                  <input
+                    type="radio"
+                    name="role"
+                    value={option.value}
+                    checked={formData.role === option.value}
+                    onChange={handleChange}
+                  />
+                  <div className="role-option-body">
+                    <span className="role-option-icon">
+                      <FontAwesomeIcon icon={option.icon} />
+                    </span>
+                    <div>
+                      <p className="role-option-title">{option.label}</p>
+                      <p className="role-option-blurb">{option.blurb}</p>
+                    </div>
+                  </div>
+                </label>
+              ))}
+            </div>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
@@ -221,6 +278,7 @@ export default function Login({ onLogin }) {
             <h4>Demo Credentials</h4>
             <p>Email: demo@mindcare.com</p>
             <p>Password: password123</p>
+            <p className="role-hint">Switch roles above to explore student, counselor, or admin flows.</p>
           </div>
         </motion.div>
 

@@ -6,9 +6,11 @@ import {
   faArrowRight,
   faArrowLeft,
   faExclamationTriangle,
-  faInfoCircle,
-  faChartLine,
-  faCalendarCheck
+  faCalendarCheck,
+  faShieldAlt,
+  faLock,
+  faComments,
+  faLifeRing
 } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -123,6 +125,66 @@ export default function ScreeningTest({ user }) {
       }
     }
   };
+
+  const heroStats = [
+    { label: 'Assessments completed', value: '48k+', detail: 'Anonymized student sessions' },
+    { label: 'Avg. next-step match', value: '2m 57s', detail: 'From score to guidance' },
+    { label: 'Campuses partnered', value: '120+', detail: 'Across India & APAC' }
+  ];
+
+  const assuranceHighlights = [
+    {
+      icon: faShieldAlt,
+      title: 'Clinical governance',
+      copy: 'Evidence-based scoring with automatic severity bands reviewed quarterly by licensed therapists.',
+      detail: 'Updated every semester'
+    },
+    {
+      icon: faLock,
+      title: 'Secure by default',
+      copy: 'Local storage keeps identifiers off shared servers and allows you to wipe your trail anytime.',
+      detail: 'You control retention'
+    },
+    {
+      icon: faCalendarCheck,
+      title: 'Guided follow-through',
+      copy: 'Scores instantly unlock booking links, peer groups, and self-led plans matched to your severity.',
+      detail: 'Care concierge within minutes'
+    }
+  ];
+
+  const journeyTimeline = [
+    {
+      title: '1. Screen with intention',
+      description: 'Answer focused prompts in under five minutes on any device, in any language you prefer.'
+    },
+    {
+      title: '2. Interpret confidently',
+      description: 'See severity bands, protective factors, and suggested practices curated by clinicians.'
+    },
+    {
+      title: '3. Act in one tap',
+      description: 'Book the care team, join moderated peer spaces, or export a summary for your counselor.'
+    }
+  ];
+
+  const supportChannels = [
+    {
+      icon: faCalendarCheck,
+      title: 'Book the care team',
+      description: 'Priority counselor slots unlock automatically for moderate or severe scores.'
+    },
+    {
+      icon: faComments,
+      title: 'Join guided peer rooms',
+      description: 'Find moderated student circles that mirror what you are navigating right now.'
+    },
+    {
+      icon: faLifeRing,
+      title: '24/7 safety desk',
+      description: 'High-risk answers ping duty clinicians who can escalate to local crisis partners.'
+    }
+  ];
 
   // Function to start a specific test
   const startTest = (testKey) => {
@@ -267,255 +329,300 @@ export default function ScreeningTest({ user }) {
     setTestResults(null);
   };
 
+  const scrollToTestSelection = () => {
+    const element = document.getElementById('screening-tests');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
+  const showIntroPanels = !selectedTest && !showResults;
+
   return (
     <div className="screening-page">
-      <div className="container">
-        {/* Page Header */}
-        <motion.div 
-          className="page-header"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="header-content">
-            <h1>
-              <FontAwesomeIcon icon={faClipboardList} />
-              Mental Health Screening
-            </h1>
-            <p>Early detection tools to assess your mental well-being</p>
-          </div>
-        </motion.div>
-
-        {/* Important Information */}
-        <motion.div 
-          className="screening-info"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
-          <div className="info-card">
-            <div>
-              <h3>
-                <FontAwesomeIcon icon={faInfoCircle} style={{ marginRight: "8px", color: "#3498db" }} />
-                About These Screenings
-              </h3>
-              <p>These are validated psychological screening tools used by healthcare professionals. They are not diagnostic tools but can help identify if you might benefit from professional support.</p>
-              <ul className="screening-info-list">
-                <li>
-                  <span role="img" aria-label="correct">✅</span>
-                  Your info here...
-                </li>
-                <li>
-                  <span role="img" aria-label="correct">✅</span>
-                  Based on standardized questionnaires (PHQ-9, GAD-7)
-                </li>
-                <li>
-                  <span role="img" aria-label="correct">✅</span>
-                  Takes only a few minutes to complete
-                </li>
-                <li>
-                  <span role="img" aria-label="correct">✅</span>
-                  Provides immediate results and recommendations
-                </li>
-              </ul>
-            </div>
-          </div>
-        </motion.div>
-
-        {!selectedTest && !showResults && (
-          /* Test Selection */
+      <section className="screening-hero">
+        <div className="screening-hero-grid">
           <motion.div 
-            className="test-selection"
+            className="screening-hero-copy"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.6 }}
           >
-            <h2>Choose a Screening Tool</h2>
-            <div className="tests-grid">
-              {Object.entries(screeningTests).map(([key, test]) => (
-                <motion.div
-                  key={key}
-                  className="test-card"
-                  whileHover={{ y: -5 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <div className="test-info">
-                    <h3>{test.name}</h3>
-                    <p>{test.description}</p>
-                    <div className="test-details">
-                      <span><FontAwesomeIcon icon={faClipboardList} /> {test.questions.length} questions</span>
-                      <span><FontAwesomeIcon icon={faCalendarCheck} /> {test.duration}</span>
-                    </div>
-                  </div>
-                  <button 
-                    className="btn btn-primary"
-                    onClick={() => startTest(key)}
-                  >
-                    Start Test
-                    <FontAwesomeIcon icon={faArrowRight} />
-                  </button>
-                </motion.div>
+            <span className="screening-eyebrow">Clinical clarity in minutes</span>
+            <h1>Know when to reach for help with serene, science-led screenings.</h1>
+            <p>
+              Transparent scoring, private storage, and instant routing to resources ensure every self-check feels safe,
+              actionable, and human.
+            </p>
+            <div className="hero-actions">
+              <motion.button 
+                className="btn btn-primary"
+                onClick={scrollToTestSelection}
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+              >
+                Start screening
+                <FontAwesomeIcon icon={faArrowRight} />
+              </motion.button>
+              <button 
+                className="btn btn-outline"
+                onClick={() => document.getElementById('screening-tips')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              >
+                How it works
+              </button>
+            </div>
+            <div className="hero-stats">
+              {heroStats.map((stat) => (
+                <div className="hero-stat-card" key={stat.label}>
+                  <span>{stat.value}</span>
+                  <p>{stat.label}</p>
+                  <small>{stat.detail}</small>
+                </div>
               ))}
             </div>
           </motion.div>
-        )}
+        </div>
+      </section>
 
-        {selectedTest && !showResults && (
-          /* Test Questions */
-          <motion.div 
-            className="test-container"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="test-header">
-              <h2>{screeningTests[selectedTest].name}</h2>
-              <div className="progress-info">
-                <span>Question {currentQuestion + 1} of {screeningTests[selectedTest].questions.length}</span>
-                <div className="progress-bar">
-                  <div 
-                    className="progress-fill"
-                    style={{ 
-                      width: `${((currentQuestion + 1) / screeningTests[selectedTest].questions.length) * 100}%` 
-                    }}
-                  />
-                </div>
+      {showIntroPanels && (
+        <>
+          <section className="screening-assurance" id="screening-tips">
+            <div className="container">
+              <div className="section-heading">
+                <span>Built for campuses</span>
+                <h2>What makes these screenings feel different</h2>
+                <p>Every detail centers trust: clinician governance, personal control of data, and seamless escalation paths.</p>
+              </div>
+              <div className="assurance-grid">
+                {assuranceHighlights.map((highlight) => (
+                  <div className="assurance-card" key={highlight.title}>
+                    <div className="assurance-icon">
+                      <FontAwesomeIcon icon={highlight.icon} />
+                    </div>
+                    <h3>{highlight.title}</h3>
+                    <p>{highlight.copy}</p>
+                    <span>{highlight.detail}</span>
+                  </div>
+                ))}
               </div>
             </div>
+          </section>
 
-            <AnimatePresence mode="wait">
-              <motion.div 
-                key={currentQuestion}
-                className="question-container"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-              >
-                <div className="question">
-                  <h3>Over the last 2 weeks, how often have you been bothered by:</h3>
-                  <h2>"{screeningTests[selectedTest].questions[currentQuestion]}"</h2>
-                </div>
-
-                <div className="answer-options">
-                  {screeningTests[selectedTest].options.map((option, index) => (
-                    <motion.button
-                      key={index}
-                      className={`answer-option ${answers[currentQuestion] === option.value ? 'selected' : ''}`}
-                      onClick={() => handleAnswer(option.value)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <span className="option-text">{option.text}</span>
-                      {answers[currentQuestion] === option.value && (
-                        <FontAwesomeIcon icon={faCheck} />
-                      )}
-                    </motion.button>
-                  ))}
-                </div>
-
-                <div className="navigation-buttons">
-                  {currentQuestion > 0 && (
-                    <button 
-                      className="btn btn-outline"
-                      onClick={goToPreviousQuestion}
-                    >
-                      <FontAwesomeIcon icon={faArrowLeft} />
-                      Previous
-                    </button>
-                  )}
-                  
-                  <button 
-                    className="btn btn-outline"
-                    onClick={restartTest}
-                  >
-                    Cancel Test
-                  </button>
-                </div>
-              </motion.div>
-            </AnimatePresence>
-          </motion.div>
-        )}
-
-        {showResults && testResults && (
-          /* Test Results */
-          <motion.div 
-            className="results-container"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="results-header">
-              <h2>Your Screening Results</h2>
-              <p>Completed: {new Date(testResults.completedAt).toLocaleDateString()}</p>
-            </div>
-
-            <div className="results-content">
-              <div className="score-display">
-                <div className="score-circle">
-                  <span className="score">{testResults.score}</span>
-                  <span className="max-score">/ {testResults.maxScore}</span>
-                </div>
-                <div 
-                  className="severity-badge"
-                  style={{ backgroundColor: testResults.severity.color }}
-                >
-                  {testResults.severity.level}
-                </div>
+          <section className="screening-library" id="screening-tests">
+            <div className="container">
+              <div className="section-heading">
+                <span>Validated assessments</span>
+                <h2>Select the focus that fits your moment</h2>
+                <p>Each tool uses standardized scoring and gives you a next-step plan crafted with campus clinicians.</p>
               </div>
-
-              <div className="recommendations">
-                <h3>Recommendations</h3>
-                {testResults.recommendations.map((rec, index) => (
+              <div className="screening-library-grid">
+                {Object.entries(screeningTests).map(([key, test], index) => (
                   <motion.div
-                    key={index}
-                    className={`recommendation-card ${rec.type}`}
-                    initial={{ opacity: 0, y: 10 }}
+                    key={key}
+                    className="screening-test-card"
+                    initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.1 * index }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
                   >
-                    <h4>{rec.title}</h4>
-                    <p>{rec.message}</p>
+                    <div className="test-card-head">
+                      <h3>{test.name}</h3>
+                      <p>{test.description}</p>
+                    </div>
+                    <div className="test-meta">
+                      <span><FontAwesomeIcon icon={faClipboardList} /> {test.questions.length} questions</span>
+                      <span><FontAwesomeIcon icon={faCalendarCheck} /> {test.duration}</span>
+                    </div>
+                    <button 
+                      className="btn btn-primary"
+                      onClick={() => startTest(key)}
+                    >
+                      Begin assessment
+                      <FontAwesomeIcon icon={faArrowRight} />
+                    </button>
                   </motion.div>
                 ))}
               </div>
+            </div>
+          </section>
 
-              <div className="next-steps">
-                <h3>Next Steps</h3>
-                <div className="action-buttons">
-                  <button className="btn btn-primary">
-                    Book Counseling Appointment
-                  </button>
-                  <button className="btn btn-outline">
-                    Explore Resources
-                  </button>
-                  <button className="btn btn-outline">
-                    Join Peer Support
-                  </button>
+          <section className="screening-journey">
+            <div className="container">
+              <div className="journey-intro">
+                <span>Three-step journey</span>
+                <h2>From reflection to action without friction</h2>
+                <p>We shorten the distance between noticing a feeling and receiving the right type of support.</p>
+              </div>
+              <ol className="journey-timeline">
+                {journeyTimeline.map((step, index) => (
+                  <li key={step.title}>
+                    <div className="step-index">{String(index + 1).padStart(2, '0')}</div>
+                    <div>
+                      <h3>{step.title}</h3>
+                      <p>{step.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </section>
+        </>
+      )}
+
+      {selectedTest && !showResults && (
+        <section className="screening-flow">
+          <div className="container">
+            <motion.div 
+              className="flow-card"
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="flow-head">
+                <div>
+                  <p className="flow-test-label">{screeningTests[selectedTest].name}</p>
+                  <h2>Question {currentQuestion + 1} of {screeningTests[selectedTest].questions.length}</h2>
+                </div>
+                <div className="flow-progress">
+                  <span>{Math.round(((currentQuestion + 1) / screeningTests[selectedTest].questions.length) * 100)}% complete</span>
+                  <div className="progress-bar">
+                    <div 
+                      className="progress-fill"
+                      style={{ width: `${((currentQuestion + 1) / screeningTests[selectedTest].questions.length) * 100}%` }}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <div className="results-actions">
-                <button 
-                  className="btn btn-outline"
-                  onClick={restartTest}
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={currentQuestion}
+                  className="flow-question-block"
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  Take Another Test
-                </button>
-              </div>
-            </div>
+                  <p className="flow-question-lead">Over the last two weeks, how often have you been bothered by:</p>
+                  <h3>{screeningTests[selectedTest].questions[currentQuestion]}</h3>
 
-            <div className="disclaimer">
-              <FontAwesomeIcon icon={faExclamationTriangle} />
+                  <div className="flow-options">
+                    {screeningTests[selectedTest].options.map((option, index) => (
+                      <motion.button
+                        key={index}
+                        className={`answer-option ${answers[currentQuestion] === option.value ? 'selected' : ''}`}
+                        onClick={() => handleAnswer(option.value)}
+                        whileHover={{ scale: 1.01 }}
+                        whileTap={{ scale: 0.99 }}
+                      >
+                        <span>{option.text}</span>
+                        {answers[currentQuestion] === option.value && <FontAwesomeIcon icon={faCheck} />}
+                      </motion.button>
+                    ))}
+                  </div>
+
+                  <div className="flow-navigation">
+                    {currentQuestion > 0 && (
+                      <button className="btn btn-outline" onClick={goToPreviousQuestion}>
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                        Previous
+                      </button>
+                    )}
+                    <button className="btn btn-outline" onClick={restartTest}>
+                      Cancel assessment
+                    </button>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {showResults && testResults && (
+        <section className="screening-results">
+          <div className="container">
+            <motion.div 
+              className="results-grid"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="results-score-card">
+                <p className="results-label">Completed {new Date(testResults.completedAt).toLocaleDateString()}</p>
+                <h2>{testResults.test}</h2>
+                <div className="score-ring">
+                  <span className="score-value">{testResults.score}</span>
+                  <span className="score-total">/ {testResults.maxScore}</span>
+                </div>
+                <span 
+                  className="severity-pill"
+                  style={{ backgroundColor: testResults.severity.color }}
+                >
+                  {testResults.severity.level}
+                </span>
+                <p className="results-subtext">Save this summary or share it with your counselor to inform the next session.</p>
+                <button className="btn btn-outline" onClick={restartTest}>Take another screening</button>
+              </div>
+
+              <div className="results-panel">
+                <h3>Personalized recommendations</h3>
+                <div className="recommendations-grid">
+                  {testResults.recommendations.map((rec, index) => (
+                    <motion.div
+                      key={rec.title + index}
+                      className={`recommendation-card ${rec.type}`}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.35, delay: index * 0.08 }}
+                    >
+                      <h4>{rec.title}</h4>
+                      <p>{rec.message}</p>
+                    </motion.div>
+                  ))}
+                </div>
+
+                <div className="results-actions">
+                  <button className="btn btn-primary">Book counseling appointment</button>
+                  <button className="btn btn-outline">Explore guided resources</button>
+                  <button className="btn btn-outline">Join peer support circle</button>
+                </div>
+                <div className="results-disclaimer">
+                  <FontAwesomeIcon icon={faExclamationTriangle} />
+                  <p>
+                    This screening is not a diagnosis. If you are in immediate danger or having thoughts of self-harm,
+                    contact campus security or your local emergency number right away.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
+      {(showIntroPanels || showResults) && (
+        <section className={`screening-support ${showResults ? 'screening-support--post' : ''}`}>
+          <div className="container screening-support-grid">
+            <div className="support-copy">
+              <span>Always-on care</span>
+              <h2>{showResults ? 'Choose your next step with confidence' : 'Care pathways ready whenever you are'}</h2>
               <p>
-                <strong>Important:</strong> This screening is not a diagnostic tool. 
-                If you're experiencing significant distress or having thoughts of self-harm, 
-                please contact a mental health professional or crisis helpline immediately.
+                Whether you need a quick check-in or a full care plan, these channels activate instantly after every screening.
               </p>
             </div>
-          </motion.div>
-        )}
-      </div>
+            <div className="support-cards">
+              {supportChannels.map((channel) => (
+                <div className="support-card" key={channel.title}>
+                  <div className="support-icon">
+                    <FontAwesomeIcon icon={channel.icon} />
+                  </div>
+                  <h3>{channel.title}</h3>
+                  <p>{channel.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }

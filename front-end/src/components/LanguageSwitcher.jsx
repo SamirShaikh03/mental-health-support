@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGlobe, faChevronDown } from '@fortawesome/free-solid-svg-icons';
@@ -6,6 +6,8 @@ import { faGlobe, faChevronDown } from '@fortawesome/free-solid-svg-icons';
 const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const hoverTimeout = useRef(null);
+  const switcherRef = useRef(null);
 
   const languages = [
     { code: 'en', name: 'English', nativeName: 'English' },
@@ -16,7 +18,15 @@ const LanguageSwitcher = () => {
 
   const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
+  const clearHoverTimeout = () => {
+    if (hoverTimeout.current) {
+      clearTimeout(hoverTimeout.current);
+      hoverTimeout.current = null;
+    }
+  };
+
   const handleLanguageChange = (languageCode) => {
+    clearHoverTimeout();
     i18n.changeLanguage(languageCode);
     setIsOpen(false);
     
@@ -30,11 +40,38 @@ const LanguageSwitcher = () => {
     }
   };
 
+  const openDropdown = () => {
+    clearHoverTimeout();
+    setIsOpen(true);
+  };
+
+  const scheduleClose = (event) => {
+    const nextTarget = event?.relatedTarget;
+    const isNode = typeof Node !== 'undefined' && nextTarget instanceof Node;
+    if (isNode && switcherRef.current?.contains(nextTarget)) {
+      return;
+    }
+    clearHoverTimeout();
+    hoverTimeout.current = setTimeout(() => setIsOpen(false), 220);
+  };
+
+  useEffect(() => {
+    return () => clearHoverTimeout();
+  }, []);
+
   return (
-    <div className="language-switcher">
+    <div 
+      className="language-switcher"
+      ref={switcherRef}
+      onMouseEnter={openDropdown}
+      onMouseLeave={scheduleClose}
+    >
       <button 
         className="language-toggle"
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => {
+          clearHoverTimeout();
+          setIsOpen((prev) => !prev);
+        }}
         aria-label="Switch Language"
       >
         <FontAwesomeIcon icon={faGlobe} />
@@ -46,7 +83,11 @@ const LanguageSwitcher = () => {
       </button>
       
       {isOpen && (
-        <div className="language-dropdown">
+        <div 
+          className="language-dropdown"
+          onMouseEnter={openDropdown}
+          onMouseLeave={scheduleClose}
+        >
           {languages.map((language) => (
             <button
               key={language.code}

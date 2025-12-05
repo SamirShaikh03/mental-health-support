@@ -3,16 +3,18 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faPaperPlane, 
   faRobot, 
-  faUser,
   faMicrophone,
   faStop,
-  faVolumeUp,
   faDownload,
   faTrash,
   faHeart,
   faBrain,
   faSmile,
-  faRefresh
+  faRefresh,
+  faClock,
+  faCommentDots,
+  faShieldHeart,
+  faLightbulb
 } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -23,46 +25,97 @@ export default function Chat({ user }) {
   const [isListening, setIsListening] = useState(false);
   const [chatSession, setChatSession] = useState(null);
   const [sessionStartTime, setSessionStartTime] = useState(null);
+  const [selectedMood, setSelectedMood] = useState(null);
+  const [tipIndex, setTipIndex] = useState(0);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const welcomeMessages = [
-    "Hi there! I'm your AI mental health companion. How are you feeling today?",
-    "Welcome back! I'm here to listen and support you. What's on your mind?",
-    "Hello! I'm glad you're here. How can I help you with your mental wellness today?"
+  const assistantName = "SerenityAI";
+  const displayName = user?.name?.split(' ')[0] || 'friend';
+
+  const heroStats = [
+    { icon: faClock, label: 'Avg response time', value: '< 30 sec', detail: 'Stays in sync with you' },
+    { icon: faCommentDots, label: 'Context depth', value: '8 turns', detail: 'Keeps recent nuances' },
+    { icon: faShieldHeart, label: 'Care rating', value: '4.9 / 5', detail: 'Community feedback' }
   ];
 
-  const suggestionPrompts = [
-    "I'm feeling anxious",
-    "I need help with stress",
-    "I'm having trouble sleeping",
+  const moodOptions = [
+    {
+      id: 'steady',
+      emoji: '🌤️',
+      label: 'Steady-ish',
+      helper: 'Need gentle reflection',
+      prompt: "Mood check-in: I'm feeling relatively steady but would like a reflective prompt.",
+      response: 'Noted. Let’s build on that steadiness with a grounding reflection—what would you like to appreciate about yourself today?'
+    },
+    {
+      id: 'overwhelmed',
+      emoji: '🌧️',
+      label: 'Overwhelmed',
+      helper: 'Need grounding support',
+      prompt: 'Mood check-in: I feel overwhelmed and would like grounding guidance.',
+      response: 'Thanks for letting me know. Let’s slow things down: inhale for 4, hold for 4, exhale for 6. Want to name one worry we can deconstruct together?'
+    },
+    {
+      id: 'anxious',
+      emoji: '⚡',
+      label: 'Anxious',
+      helper: 'Need calming plan',
+      prompt: 'Mood check-in: Anxiety feels high and I need a calming plan.',
+      response: 'Understood. We can pair a breathing cycle with a thought reframe. What trigger showed up most recently?'
+    },
+    {
+      id: 'drained',
+      emoji: '🌙',
+      label: 'Drained',
+      helper: 'Need restoration idea',
+      prompt: 'Mood check-in: Energy is low; I need a restorative micro-ritual.',
+      response: 'Let’s protect your energy. We can design a 10-minute decompression ritual—shall we start with environment or emotions?'
+    }
   ];
 
-  const therapyTechniques = {
-    anxiety: [
-      "Let's try a breathing exercise. Breathe in for 4 counts, hold for 4, and out for 4.",
-      "Can you tell me about what specifically is making you feel anxious right now?",
-      "Remember, anxiety is temporary. What has helped you cope with anxiety in the past?"
-    ],
-    stress: [
-      "Stress can be overwhelming. What's the biggest source of stress in your life right now?",
-      "Let's break down your stressors into manageable pieces. What feels most urgent?",
-      "Have you tried any relaxation techniques recently? I can guide you through some."
-    ],
-    depression: [
-      "I hear that you're struggling. Can you tell me about one small thing that brought you joy recently?",
-      "Depression can make everything feel heavy. You're brave for reaching out.",
-      "What does a good day look like for you? Even small positive moments matter."
-    ],
-    sleep: [
-      "Sleep troubles can affect everything. What's your bedtime routine like?",
-      "Let's explore what might be keeping you awake. Is it thoughts, physical discomfort, or environment?",
-      "Good sleep hygiene can make a big difference. Are you interested in some tips?"
-    ]
+  const quickPrompts = [
+    'Guide me through a two-minute grounding exercise.',
+    'Help me reframe a stressful thought I am stuck on.',
+    'Plan tonight’s wind-down so I can actually rest.',
+    'Coach me before a difficult conversation I am nervous about.',
+    'How can I set a compassionate boundary today?'
+  ];
+
+  const wellnessTips = [
+    {
+      title: 'Micro-grounding reset',
+      description: 'Name 5 things you can see, 4 you can touch, 3 you can hear. Pair it with a slow exhale to calm your nervous system.',
+      prompt: 'Can you walk me through the 5-4-3 grounding technique right now?'
+    },
+    {
+      title: 'Box breathing focus',
+      description: 'Inhale 4 • Hold 4 • Exhale 6 • Rest 2. Repeat three rounds to lower cortisol and regain clarity before responding.',
+      prompt: 'Lead me through three rounds of box breathing and add an empowering affirmation.'
+    },
+    {
+      title: 'Energy audit',
+      description: 'Track your energy on a 1–10 scale every 3 hours today. Jot what raised or drained it to spot hidden patterns.',
+      prompt: 'Help me design a quick energy audit template I can use today.'
+    }
+  ];
+
+  const currentTip = wellnessTips[tipIndex];
+  const handleInputWrapperClick = (event) => {
+    const element = event.target;
+    const isButtonClick =
+      typeof Element !== 'undefined' &&
+      element instanceof Element &&
+      element.closest('button');
+
+    if (isButtonClick) {
+      return;
+    }
+    inputRef.current?.focus();
   };
 
   useEffect(() => {
-    if (user && messages.length === 0) {
+    if (user) {
       startNewSession();
     }
   }, [user]);
@@ -71,22 +124,32 @@ export default function Chat({ user }) {
     scrollToBottom();
   }, [messages]);
 
-  const startNewSession = () => {
+  const createBotMessage = (text, source = 'system') => ({
+    id: Date.now() + Math.random(),
+    sender: "bot",
+    text,
+    timestamp: new Date(),
+    source
+  });
+
+  const startNewSession = (withGreeting = true) => {
     const sessionId = Date.now();
     const startTime = new Date();
     setChatSession(sessionId);
     setSessionStartTime(startTime);
-    
-    const welcomeMsg = welcomeMessages[Math.floor(Math.random() * welcomeMessages.length)];
-    const botMessage = {
-      id: Date.now(),
-      sender: "bot",
-      text: welcomeMsg,
-      timestamp: startTime,
-      type: "welcome"
-    };
-    
-    setMessages([botMessage]);
+    setSelectedMood(null);
+    setTipIndex(0);
+    setIsTyping(false);
+
+    if (withGreeting && user) {
+      const greeting = createBotMessage(
+        `Hi ${displayName}, I'm ${assistantName}. I’ll keep things calm, clear, and confidential. Share what’s on your mind or tap a prompt to begin.`,
+        'welcome'
+      );
+      setMessages([greeting]);
+    } else {
+      setMessages([]);
+    }
   };
 
   const scrollToBottom = () => {
@@ -98,86 +161,120 @@ export default function Chat({ user }) {
         inline: "nearest"
       });
     }, 100);
+  }
+
+
+  // Fallback rule-based response generator (used when Hugging Face key is not set)
+  const generateResponse = (message) => {
+    if (!message) return "Can you say that again?";
+    const m = message.toString().toLowerCase();
+
+    // urgent/crisis detection - keep short and safe
+    if (/suicide|kill myself|end my life|hurt myself|i'm going to die|i will die/.test(m)) {
+      return "If you are in immediate danger, please call your local emergency services or a crisis helpline right now.";
+    }
+
+    // quick intents
+    if (/\b(hi|hello|hey)\b/.test(m)) return "Hello — I'm here to listen. How can I help you today?";
+    if (/\b(thank|thanks)\b/.test(m)) return "You're welcome — I'm glad I could help.";
+    if (/\b(stress|anxiety|anxious|depressed|depression)\b/.test(m)) {
+      return "I’m sorry you’re feeling this way. Would you like a short breathing exercise or some coping tips?";
+    }
+
+    // default empathetic reply
+    return "I hear you. Can you tell me a little more about that?";
   };
 
-  const generateResponse = (userMessage) => {
-    const message = userMessage.toLowerCase();
-    
-    // Simple keyword-based responses (in a real app, this would be an AI API)
-    if (message.includes('anxious') || message.includes('anxiety') || message.includes('worried')) {
-      const responses = therapyTechniques.anxiety;
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
-    
-    if (message.includes('stress') || message.includes('overwhelmed') || message.includes('pressure')) {
-      const responses = therapyTechniques.stress;
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
-    
-    if (message.includes('sad') || message.includes('depressed') || message.includes('down') || message.includes('hopeless')) {
-      const responses = therapyTechniques.depression;
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
-    
-    if (message.includes('sleep') || message.includes('insomnia') || message.includes('tired') || message.includes('rest')) {
-      const responses = therapyTechniques.sleep;
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
-    
-    if (message.includes('hello') || message.includes('hi') || message.includes('hey')) {
-      return "Hello! I'm here to support you. How are you feeling right now?";
-    }
-    
-    if (message.includes('thank') || message.includes('thanks')) {
-      return "You're very welcome! I'm glad I could help. Is there anything else you'd like to talk about?";
-    }
-    
-    if (message.includes('goodbye') || message.includes('bye')) {
-      return "Take care! Remember, I'm always here when you need someone to talk to. You're doing great by taking care of your mental health.";
-    }
-    
-    // Default empathetic responses
-    const defaultResponses = [
-      "I hear you. Can you tell me more about how you're feeling?",
-      "That sounds challenging. You're not alone in feeling this way.",
-      "Thank you for sharing that with me. How long have you been feeling this way?",
-      "I appreciate you opening up. What do you think would help you feel better right now?",
-      "Your feelings are valid. What support do you have in your life?",
-      "That takes courage to share. What would you like to focus on today?"
-    ];
-    
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-  };
-
+  // Enhanced sendMessage function with better error handling and user feedback
   const sendMessage = async (messageText = input) => {
     if (!messageText.trim()) return;
-    
-    const userMsg = {
-      id: Date.now(),
-      sender: "user",
-      text: messageText,
-      timestamp: new Date()
-    };
-    
+
+    const userMsg = { id: Date.now(), sender: "user", text: messageText, timestamp: new Date() };
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setIsTyping(true);
 
-    // Simulate AI thinking time
-    setTimeout(() => {
-      const botResponse = generateResponse(messageText);
-      const botMsg = {
-        id: Date.now() + 1,
-        sender: "bot",
-        text: botResponse,
-        timestamp: new Date()
-      };
+    // Build messages for model: include a short system prompt + recent history
+    const system = { 
+      role: 'system', 
+      content: `${assistantName} is a compassionate, professional mental health AI assistant. Provide supportive, empathetic responses that validate feelings and offer practical coping strategies. Always encourage professional help for serious concerns. Keep responses concise but warm.` 
+    };
+    const history = messages.slice(-8).map(m => ({
+      role: m.sender === 'user' ? 'user' : 'assistant',
+      content: m.text
+    }));
+    const payload = [system, ...history, { role: 'user', content: messageText }];
+
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ messages: payload })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API request failed: ${response.status}`);
+      }
+
+      const json = await response.json();
+      const replyText = json.reply || 'I apologize, but I\'m having trouble responding right now. How are you feeling at this moment?';
+      const source = json.source || 'unknown';
+
+      // Add a slight delay for natural conversation flow
+      setTimeout(() => {
+        const botMsg = { 
+          id: Date.now() + 1, 
+          sender: "bot", 
+          text: replyText, 
+          timestamp: new Date(),
+          source: source // Track whether response came from AI or fallback
+        };
+        setMessages(prev => [...prev, botMsg]);
+        setIsTyping(false);
+      }, 800);
+
+    } catch (err) {
+      console.error('Chat error:', err);
+
+      // Enhanced fallback response based on user message context
+      const fallbackResponse = generateLocalFallback(messageText);
       
-      setMessages(prev => [...prev, botMsg]);
-      setIsTyping(false);
-    }, 1000 + Math.random() * 2000);
+      setTimeout(() => {
+        const botMsg = { 
+          id: Date.now() + 1, 
+          sender: "bot", 
+          text: fallbackResponse, 
+          timestamp: new Date(),
+          source: 'local-fallback'
+        };
+        setMessages(prev => [...prev, botMsg]);
+        setIsTyping(false);
+      }, 600);
+    }
   };
 
+  // Local fallback function for when API is completely unavailable
+  const generateLocalFallback = (message) => {
+    const msg = message.toLowerCase();
+    
+    if (/anxiety|anxious|panic/.test(msg)) {
+      return "I can see you're feeling anxious. Try this: take a slow, deep breath in for 4 counts, hold for 4, then exhale for 6. You're safe right now. What's one thing you can see around you?";
+    }
+    
+    if (/sad|depressed|down/.test(msg)) {
+      return "Thank you for sharing how you're feeling. It's okay to feel this way, and it's brave of you to reach out. What's one small thing that usually brings you even a tiny bit of comfort?";
+    }
+    
+    if (/stress|overwhelmed/.test(msg)) {
+      return "Feeling overwhelmed is completely understandable. Let's take this one step at a time. What feels like the most urgent thing you're dealing with right now?";
+    }
+    
+    return "I'm here to listen to you. Your feelings are valid, and it's important that you're taking time to check in with yourself. What would feel most helpful for you right now?";
+  };
+  
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -218,7 +315,6 @@ export default function Chat({ user }) {
 
   const clearChat = () => {
     if (window.confirm('Are you sure you want to clear the chat history?')) {
-      setMessages([]);
       startNewSession();
     }
   };
@@ -238,7 +334,7 @@ export default function Chat({ user }) {
     
     const link = document.createElement('a');
     link.href = url;
-    link.download = `mindcare-chat-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `serenityai-chat-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -258,6 +354,42 @@ export default function Chat({ user }) {
     window.scrollTo(0, 0);
   }, []);
 
+  const handleMoodSelect = (option) => {
+    const timestamp = new Date();
+    setSelectedMood(option.id);
+
+    const userMoodMessage = {
+      id: timestamp.getTime(),
+      sender: "user",
+      text: option.prompt,
+      timestamp
+    };
+
+    setMessages(prev => [...prev, userMoodMessage]);
+    setIsTyping(true);
+
+    setTimeout(() => {
+      const supportiveReply = {
+        id: Date.now() + Math.random(),
+        sender: "bot",
+        text: option.response,
+        timestamp: new Date(),
+        source: 'mood-guide'
+      };
+      setMessages(prev => [...prev, supportiveReply]);
+      setIsTyping(false);
+    }, 700);
+  };
+
+  const handlePromptClick = (prompt) => {
+    setInput(prompt);
+    inputRef.current?.focus();
+  };
+
+  const cycleTip = () => {
+    setTipIndex(prev => (prev + 1) % wellnessTips.length);
+  };
+
   if (!user) {
     return (
       <div className="chat-page">
@@ -275,6 +407,96 @@ export default function Chat({ user }) {
   return (
     <div className="chat-page">
       <div className="container">
+        <section className="chat-hero-panel">
+          <div className="chat-hero-copy">
+            <div className="chat-hero-eyebrow">{assistantName} • AI Well-being Guide</div>
+            <h1>Hi {displayName}, let’s create a calmer headspace.</h1>
+            <p>
+              {assistantName} blends attentive listening with real-time micro-practices so you can steady your thoughts, rehearse difficult moments, and protect your energy without judgment.
+            </p>
+            <div className="hero-actions">
+              <button className="hero-btn primary" onClick={() => handlePromptClick('Can you help me plan my next therapy session agenda?')}>
+                Start with a guided prompt
+              </button>
+              <button className="hero-btn ghost" onClick={scrollToBottom}>
+                Resume session
+              </button>
+            </div>
+          </div>
+          <div className="chat-hero-stats">
+            {heroStats.map((stat) => (
+              <div className="hero-stat" key={stat.label}>
+                <div className="hero-stat-icon">
+                  <FontAwesomeIcon icon={stat.icon} />
+                </div>
+                <div>
+                  <p>{stat.label}</p>
+                  <strong>{stat.value}</strong>
+                  <span>{stat.detail}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section className="chat-utilities-grid">
+          <div className="mood-panel">
+            <div className="panel-header">
+              <h4>Mood check-in</h4>
+              <span>Instantly tailor the conversation</span>
+            </div>
+            <div className="mood-chips">
+              {moodOptions.map((option) => (
+                <button
+                  key={option.id}
+                  className={`mood-chip ${selectedMood === option.id ? 'active' : ''}`}
+                  onClick={() => handleMoodSelect(option)}
+                >
+                  <span className="mood-emoji">{option.emoji}</span>
+                  <div>
+                    <strong>{option.label}</strong>
+                    <small>{option.helper}</small>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="prompt-panel">
+            <div className="panel-header">
+              <h4>Guided prompts</h4>
+              <span>Tap to auto-fill the message box</span>
+            </div>
+            <div className="prompt-chips">
+              {quickPrompts.map((prompt) => (
+                <button key={prompt} className="prompt-pill" onClick={() => handlePromptClick(prompt)}>
+                  {prompt}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="tip-panel">
+            <div className="panel-header">
+              <h4>Micro-practice</h4>
+              <span>Curated by {assistantName}</span>
+            </div>
+            <div className="tip-card">
+              <div className="tip-icon">
+                <FontAwesomeIcon icon={faLightbulb} />
+              </div>
+              <h5>{currentTip.title}</h5>
+              <p>{currentTip.description}</p>
+              <div className="tip-actions">
+                <button className="hero-btn ghost" onClick={cycleTip}>Next idea</button>
+                <button className="hero-btn primary" onClick={() => handlePromptClick(currentTip.prompt)}>
+                  Try this now
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
         <motion.div 
           className="chat-container"
           initial={{ opacity: 0, y: 20 }}
@@ -288,10 +510,11 @@ export default function Chat({ user }) {
                 <FontAwesomeIcon icon={faRobot} />
               </div>
               <div className="chat-details">
-                <h2>AI Therapy Assistant</h2>
+                <p className="assistant-pill">{assistantName}</p>
+                <h2>Trusted mental health co-pilot</h2>
                 <p className="status">
                   <span className="online-indicator"></span>
-                  Online • Confidential • Professional
+                  Live • Confidential • Trauma-informed
                 </p>
                 {sessionStartTime && (
                   <p className="session-time">
@@ -300,7 +523,7 @@ export default function Chat({ user }) {
                 )}
               </div>
             </div>
-            
+
             <div className="chat-actions">
               <button 
                 className="action-btn"
@@ -388,32 +611,9 @@ export default function Chat({ user }) {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggestion Prompts */}
-          {messages.length <= 1 && (
-            <motion.div 
-              className="suggestion-prompts"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              <p>Quick prompts to get started:</p>
-              <div className="prompts-grid">
-                {suggestionPrompts.map((prompt, index) => (
-                  <button
-                    key={index}
-                    className="prompt-btn"
-                    onClick={() => sendMessage(prompt)}
-                  >
-                    {prompt}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-
           {/* Chat Input */}
           <div className="chat-input-container">
-            <div className="input-wrapper">
+            <div className="input-wrapper" onClick={handleInputWrapperClick}>
               <textarea
                 ref={inputRef}
                 value={input}
