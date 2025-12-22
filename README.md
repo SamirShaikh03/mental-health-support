@@ -1,8 +1,8 @@
-# 🧠 StudentMind Connect
+# 🧠 Well Setu
 
 **A Comprehensive Digital Mental Health Support Platform for Students**
 
-StudentMind Connect is a modern, React-based web application designed to provide accessible mental health support, resources, and tools specifically tailored for students. The platform offers AI-powered chat support, mental health resources, mood tracking, and a safe space for students to access professional mental health services.
+Well Setu is a modern, React-based web application designed to provide accessible mental health support, resources, and tools specifically tailored for students. The platform offers AI-powered chat support, mental health resources, mood tracking, and a safe space for students to access professional mental health services.
 
 ---
 
@@ -226,14 +226,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 🆘 Support & Resources
-
-### Mental Health Crisis Resources
-- **Emergency**: Call 112 (India) or your local emergency number
-- **KIRAN Helpline**: 1800-599-0019 (24/7 support)
-- **Vandrevala Foundation**: 1860-2662-345
-- **iCall**: 022-2556-3291
-
 ### Technical Support
 - **Issues**: Report bugs via GitHub Issues
 - **Documentation**: Check the wiki for detailed guides
@@ -243,8 +235,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Mental health professionals who guided the development
-- Student communities who provided feedback and testing
 - Open source libraries that made this project possible
 - Organizations promoting mental health awareness in education
 
