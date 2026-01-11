@@ -4855,12 +4855,14 @@
   background: var(--color-surface);
   border: 1px solid rgba(99, 102, 241, 0.12);
   box-shadow: 0 30px 60px rgba(15, 23, 42, 0.08);
+  margin-top: -112px;
 }
 
 [data-theme="dark"] .screening-hero-copy {
   background: rgba(15, 23, 42, 0.85);
   border-color: rgba(99, 102, 241, 0.24);
   box-shadow: 0 30px 60px rgba(2, 6, 23, 0.75);
+  margin-top: -112px;
 }
 
 .screening-eyebrow {
