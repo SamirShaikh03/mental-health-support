@@ -27,41 +27,6 @@ Well Setu is a modern, React-based web application designed to provide accessibl
 
 ---
 
-## 🚀 Quick Start
-
-### Prerequisites
-- **Node.js** (v14 or higher)
-- **npm** (v6 or higher)
-- Modern web browser (Chrome, Firefox, Safari, Edge)
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/mental-health-support.git
-   cd mental-health-support
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Start the development server**
-   ```bash
-   npm start
-   ```
-
-4. **Open your browser**
-   Navigate to `http://localhost:3000`
-
-### Build for Production
-```bash
-npm run build
-```
-
----
-
 ## 🏗️ Project Structure
 
 ```
@@ -166,15 +131,6 @@ The platform prioritizes **India-specific mental health resources** including:
 
 ---
 
-## 🚀 Development
-
-### Available Scripts
-
-- `npm start` - Run development server
-- `npm test` - Run test suite
-- `npm run build` - Build for production
-- `npm run eject` - Eject from Create React App (⚠️ irreversible)
-
 ### Development Guidelines
 
 1. **Component Structure**: Use functional components with hooks
@@ -200,16 +156,6 @@ REACT_APP_ANALYTICS_ID=your_analytics_id
 - **Content**: Update mental health resources in `Resources.jsx`
 
 ---
-
-## 🤝 Contributing
-
-We welcome contributions to improve mental health support for students!
-
-1. **Fork the repository**
-2. **Create a feature branch** (`git checkout -b feature/AmazingFeature`)
-3. **Commit your changes** (`git commit -m 'Add some AmazingFeature'`)
-4. **Push to the branch** (`git push origin feature/AmazingFeature`)
-5. **Open a Pull Request**
 
 ### Contribution Guidelines
 - Follow React best practices
