@@ -1,5 +1,9 @@
 {
   "version": 2,
+  "buildCommand": "cd front-end && npm install && npm run build",
+  "outputDirectory": "front-end/build",
+  "installCommand": "cd front-end && npm install",
+  "framework": null,
   "builds": [
     {
       "src": "front-end/package.json",
@@ -14,9 +18,12 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/api/$1"
+      "dest": "/front-end/pages/api/$1"
     },
     { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
-  ]
+    { "src": "/(.*)", "dest": "/front-end/build/index.html" }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
