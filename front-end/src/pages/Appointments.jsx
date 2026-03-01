@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faCalendar, 
@@ -22,6 +23,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { format, addDays, isToday, isTomorrow, isYesterday, parseISO } from 'date-fns';
 
 export default function Appointments({ user }) {
+  const { t } = useTranslation();
   const [appointments, setAppointments] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showAddForm, setShowAddForm] = useState(false);
@@ -41,9 +43,9 @@ export default function Appointments({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
 
   const appointmentTypes = [
-    { value: 'in-person', label: 'In-Person', icon: faUserMd },
-    { value: 'video', label: 'Video Call', icon: faVideo },
-    { value: 'phone', label: 'Phone Call', icon: faPhone }
+    { value: 'in-person', label: t('appointments.types.inPerson'), icon: faUserMd },
+    { value: 'video', label: t('appointments.types.videoCall'), icon: faVideo },
+    { value: 'phone', label: t('appointments.types.phoneCall'), icon: faPhone }
   ];
 
   const commonProviders = [
@@ -178,7 +180,7 @@ export default function Appointments({ user }) {
   };
 
   const deleteAppointment = (appointmentId) => {
-    if (window.confirm('Are you sure you want to cancel this appointment?')) {
+    if (window.confirm(t('appointments.cancelConfirm'))) {
       setAppointments(prev => prev.filter(apt => apt.id !== appointmentId));
     }
   };
@@ -276,8 +278,8 @@ export default function Appointments({ user }) {
         <div className="container">
           <div className="auth-required">
             <FontAwesomeIcon icon={faCalendar} size="3x" />
-            <h2>Please log in to manage your appointments</h2>
-            <p>Schedule and track your mental health appointments</p>
+            <h2>{t('appointments.loginRequired')}</h2>
+            <p>{t('appointments.loginDescription')}</p>
           </div>
         </div>
       </div>
@@ -295,12 +297,12 @@ export default function Appointments({ user }) {
         >
           <div className="header-top">
             <div className="header-copy">
-              <p className="header-eyebrow">Care planner</p>
+              <p className="header-eyebrow">{t('appointments.carePlanner')}</p>
               <h1>
                 <FontAwesomeIcon icon={faCalendar} className="header-icon" />
-                Appointments
+                {t('appointments.pageTitle')}
               </h1>
-              <p>Keep every session aligned with your routine and surface what needs attention next.</p>
+              <p>{t('appointments.pageDescription')}</p>
             </div>
 
             <motion.button 
@@ -310,7 +312,7 @@ export default function Appointments({ user }) {
               whileTap={{ scale: 0.95 }}
             >
               <FontAwesomeIcon icon={faPlus} />
-              New Appointment
+              {t('appointments.newAppointment')}
             </motion.button>
           </div>
 
@@ -318,22 +320,22 @@ export default function Appointments({ user }) {
             <div className="metric-card">
               <FontAwesomeIcon icon={faClock} />
               <div>
-                <span>Next session</span>
-                <strong>{nextAppointment ? `${formatAppointmentDate(nextAppointment.date)} • ${nextAppointment.time}` : 'No upcoming sessions'}</strong>
+                <span>{t('appointments.nextSession')}</span>
+                <strong>{nextAppointment ? `${formatAppointmentDate(nextAppointment.date)} • ${nextAppointment.time}` : t('appointments.noUpcoming')}</strong>
               </div>
             </div>
             <div className="metric-card">
               <FontAwesomeIcon icon={faCheckCircle} />
               <div>
-                <span>Completed</span>
+                <span>{t('appointments.completedLabel')}</span>
                 <strong>{completedCount}</strong>
               </div>
             </div>
             <div className="metric-card">
               <FontAwesomeIcon icon={faUserMd} />
               <div>
-                <span>Care team</span>
-                <strong>{uniqueProviders.length || 0} {uniqueProviders.length === 1 ? 'provider' : 'providers'}</strong>
+                <span>{t('appointments.careTeam')}</span>
+                <strong>{uniqueProviders.length || 0} {uniqueProviders.length === 1 ? t('appointments.provider') : t('appointments.providers')}</strong>
                 {providerPreview.length > 0 && (
                   <p className="metric-subtext">{providerPreview.join(' • ')}</p>
                 )}
@@ -352,7 +354,7 @@ export default function Appointments({ user }) {
           <div className="overview-cards">
             <div className="overview-card snapshot-card">
               <div className="snapshot-header">
-                <h3>Next session</h3>
+                <h3>{t('appointments.nextSession')}</h3>
                 {nextAppointment && (
                   <span className="snapshot-pill">
                     {appointmentTypes.find(t => t.value === nextAppointment.type)?.label}
@@ -370,31 +372,31 @@ export default function Appointments({ user }) {
                   </div>
                 </>
               ) : (
-                <p className="snapshot-empty">You have no upcoming sessions scheduled.</p>
+                <p className="snapshot-empty">{t('appointments.noUpcoming')}</p>
               )}
             </div>
 
             <div className="overview-card snapshot-card">
-              <h3>Progress snapshot</h3>
+              <h3>{t('appointments.overview.progressSnapshot')}</h3>
               <div className="snapshot-stat-grid">
                 <div>
-                  <span>Scheduled</span>
+                  <span>{t('appointments.overview.scheduled')}</span>
                   <strong>{scheduledCount}</strong>
                 </div>
                 <div>
-                  <span>Completed</span>
+                  <span>{t('appointments.completedLabel')}</span>
                   <strong>{completedCount}</strong>
                 </div>
                 <div>
-                  <span>Missed</span>
+                  <span>{t('appointments.overview.missed')}</span>
                   <strong>{missedCount}</strong>
                 </div>
               </div>
-              <p className="snapshot-subtext">A clear view of where the month stands so far.</p>
+              <p className="snapshot-subtext">{t('appointments.overview.monthView')}</p>
             </div>
 
             <div className="overview-card snapshot-card">
-              <h3>Care reminders</h3>
+              <h3>{t('appointments.reminders.title')}</h3>
               <p className="snapshot-eyebrow">{reminderDescription}</p>
               <ul className="snapshot-list">
                 {focusAppointments.length > 0 ? (
@@ -405,7 +407,7 @@ export default function Appointments({ user }) {
                     </li>
                   ))
                 ) : (
-                  <li>We'll highlight preparation steps once new sessions are booked.</li>
+                  <li>{t('appointments.reminders.noReminders')}</li>
                 )}
               </ul>
             </div>
@@ -420,7 +422,7 @@ export default function Appointments({ user }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2>Calendar View</h2>
+            <h2>{t('appointments.calendar.title')}</h2>
             <div className="calendar-container">
               <Calendar
                 onChange={setSelectedDate}
@@ -453,7 +455,7 @@ export default function Appointments({ user }) {
             {/* Selected Date Appointments */}
             <div className="selected-date-appointments">
               <h3>
-                {formatAppointmentDate(format(selectedDate, 'yyyy-MM-dd'))} Appointments
+                {formatAppointmentDate(format(selectedDate, 'yyyy-MM-dd'))} {t('appointments.calendar.appointments')}
               </h3>
               <div className="date-appointments-list">
                 {appointmentsForSelectedDate.length > 0 ? (
@@ -473,7 +475,7 @@ export default function Appointments({ user }) {
                     </div>
                   ))
                 ) : (
-                  <p className="no-appointments">No appointments on this date</p>
+                  <p className="no-appointments">{t('appointments.calendar.noAppointments')}</p>
                 )}
               </div>
             </div>
@@ -487,14 +489,14 @@ export default function Appointments({ user }) {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="list-header">
-              <h2>All Appointments</h2>
+              <h2>{t('appointments.list.title')}</h2>
               
               <div className="list-filters">
                 <div className="search-filter">
                   <FontAwesomeIcon icon={faSearch} />
                   <input
                     type="text"
-                    placeholder="Search appointments..."
+                    placeholder={t('appointments.list.search')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -505,7 +507,7 @@ export default function Appointments({ user }) {
                   onChange={(e) => setFilterType(e.target.value)}
                   className="type-filter"
                 >
-                  <option value="all">All Types</option>
+                  <option value="all">{t('appointments.list.allTypes')}</option>
                   {appointmentTypes.map(type => (
                     <option key={type.value} value={type.value}>{type.label}</option>
                   ))}
@@ -571,14 +573,14 @@ export default function Appointments({ user }) {
                           onClick={() => markAsCompleted(appointment.id)}
                         >
                           <FontAwesomeIcon icon={faCheck} />
-                          <span>Mark done</span>
+                          <span>{t('appointments.actions.markDone')}</span>
                         </button>
                         <button
                           className="appointment-chip is-neutral"
                           onClick={() => markAsMissed(appointment.id)}
                         >
                           <FontAwesomeIcon icon={faTimes} />
-                          <span>Mark missed</span>
+                          <span>{t('appointments.actions.markMissed')}</span>
                         </button>
                       </>
                     )}
@@ -588,7 +590,7 @@ export default function Appointments({ user }) {
                       onClick={() => editAppointment(appointment)}
                     >
                       <FontAwesomeIcon icon={faEdit} />
-                      <span>Edit</span>
+                      <span>{t('appointments.actions.edit')}</span>
                     </button>
 
                     <button
@@ -596,7 +598,7 @@ export default function Appointments({ user }) {
                       onClick={() => deleteAppointment(appointment.id)}
                     >
                       <FontAwesomeIcon icon={faTrash} />
-                      <span>Delete</span>
+                      <span>{t('appointments.actions.delete')}</span>
                     </button>
                   </div>
                 </motion.div>
@@ -623,7 +625,7 @@ export default function Appointments({ user }) {
                 onClick={e => e.stopPropagation()}
               >
                 <div className="modal-header">
-                  <h2>{editingAppointment ? 'Edit Appointment' : 'New Appointment'}</h2>
+                  <h2>{editingAppointment ? t('appointments.modal.editTitle') : t('appointments.modal.newTitle')}</h2>
                   <button 
                     className="close-modal"
                     onClick={resetForm}
@@ -635,27 +637,27 @@ export default function Appointments({ user }) {
                 <form onSubmit={handleSubmit} className="appointment-form">
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="title">Appointment Title *</label>
+                      <label htmlFor="title">{t('appointments.modal.title')} *</label>
                       <input
                         type="text"
                         id="title"
                         name="title"
                         value={newAppointment.title}
                         onChange={handleInputChange}
-                        placeholder="e.g., Therapy Session"
+                        placeholder={t('appointments.modal.titlePlaceholder')}
                         required
                       />
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="provider">Provider *</label>
+                      <label htmlFor="provider">{t('appointments.modal.counselor')} *</label>
                       <input
                         type="text"
                         id="provider"
                         name="provider"
                         value={newAppointment.provider}
                         onChange={handleInputChange}
-                        placeholder="Dr. Name - Specialty"
+                        placeholder={t('appointments.modal.counselorPlaceholder')}
                         list="providers"
                         required
                       />
@@ -669,7 +671,7 @@ export default function Appointments({ user }) {
 
                   <div className="form-row">
                     <div className="form-group">
-                      <label htmlFor="date">Date *</label>
+                      <label htmlFor="date">{t('appointments.modal.date')} *</label>
                       <input
                         type="date"
                         id="date"
@@ -681,7 +683,7 @@ export default function Appointments({ user }) {
                     </div>
 
                     <div className="form-group">
-                      <label htmlFor="time">Time *</label>
+                      <label htmlFor="time">{t('appointments.modal.time')} *</label>
                       <input
                         type="time"
                         id="time"
@@ -694,7 +696,7 @@ export default function Appointments({ user }) {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="type">Appointment Type *</label>
+                    <label htmlFor="type">{t('appointments.modal.type')} *</label>
                     <select
                       id="type"
                       name="type"
@@ -735,31 +737,31 @@ export default function Appointments({ user }) {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="notes">Notes</label>
+                    <label htmlFor="notes">{t('appointments.modal.notes')}</label>
                     <textarea
                       id="notes"
                       name="notes"
                       value={newAppointment.notes}
                       onChange={handleInputChange}
-                      placeholder="Any additional notes about this appointment..."
+                      placeholder={t('appointments.modal.notesPlaceholder')}
                       rows={3}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="reminderTime">Reminder</label>
+                    <label htmlFor="reminderTime">{t('appointments.modal.reminder')}</label>
                     <select
                       id="reminderTime"
                       name="reminderTime"
                       value={newAppointment.reminderTime}
                       onChange={handleInputChange}
                     >
-                      <option value="0">No reminder</option>
-                      <option value="15">15 minutes before</option>
-                      <option value="30">30 minutes before</option>
-                      <option value="60">1 hour before</option>
+                      <option value="0">{t('appointments.reminders.options.none')}</option>
+                      <option value="15">{t('appointments.reminders.options.min15')}</option>
+                      <option value="30">{t('appointments.reminders.options.min30')}</option>
+                      <option value="60">{t('appointments.reminders.options.hour1')}</option>
                       <option value="120">2 hours before</option>
-                      <option value="1440">1 day before</option>
+                      <option value="1440">{t('appointments.reminders.options.day1')}</option>
                     </select>
                   </div>
 
@@ -769,13 +771,13 @@ export default function Appointments({ user }) {
                       className="btn btn-outline"
                       onClick={resetForm}
                     >
-                      Cancel
+                      {t('appointments.modal.cancel')}
                     </button>
                     <button 
                       type="submit" 
                       className="btn btn-primary"
                     >
-                      {editingAppointment ? 'Update Appointment' : 'Schedule Appointment'}
+                      {editingAppointment ? t('appointments.modal.update') : t('appointments.modal.schedule')}
                     </button>
                   </div>
                 </form>

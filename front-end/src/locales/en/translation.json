@@ -15,7 +15,17 @@
     "register": "Register",
     "logout": "Logout",
     "profile": "Profile",
-    "adminDashboard": "Admin Dashboard"
+    "adminDashboard": "Admin Dashboard",
+    "analytics": "Analytics",
+    "counselorWorkspace": "Counselor workspace",
+    "navigate": "Navigate",
+    "yourTools": "Your tools",
+    "closeNavigation": "Close navigation",
+    "openNavigation": "Open navigation",
+    "closeMenu": "Close menu",
+    "logoutConfirm": "Are you sure you want to logout?",
+    "switchToDark": "Switch to dark mode",
+    "switchToLight": "Switch to light mode"
   },
   "home": {
     "heroTitle": "Your Mental Health Matters",
@@ -24,7 +34,7 @@
     "getStarted": "Get Started",
     "learnMore": "Learn More",
     "statsUsers": "Active Users",
-    "statsTherapists": "Certified Therapists", 
+    "statsTherapists": "Certified Therapists",
     "statsSuccess": "Success Rate",
     "statsSessions": "Sessions Completed",
     "featuresTitle": "Comprehensive Mental Health Support",
@@ -40,7 +50,7 @@
       "description": "24/7 access to empathetic AI counselor trained on evidence-based therapeutic techniques"
     },
     "moodTracking": {
-      "title": "Mood Tracking", 
+      "title": "Mood Tracking",
       "description": "Track your emotional well-being with detailed mood analytics and insights"
     },
     "exercises": {
@@ -61,40 +71,683 @@
     }
   },
   "auth": {
-    "loginTitle": "Welcome Back",
-    "loginDescription": "Sign in to continue your mental health journey",
-    "registerTitle": "Create Account",
-    "registerDescription": "Join our supportive community today",
+    "loginTitle": "Step Back Into Balance",
+    "loginDescription": "Sign in to unlock your daily reflections, counselor notes, and support spaces.",
+    "registerTitle": "Craft Your WellSetu Path",
+    "registerDescription": "Create an account to track your wellbeing rituals and connect with support.",
+    "signInAs": "Sign in as",
     "email": "Email Address",
     "password": "Password",
     "confirmPassword": "Confirm Password",
     "firstName": "First Name",
     "lastName": "Last Name",
-    "phoneNumber": "Phone Number",
-    "dateOfBirth": "Date of Birth",
+    "age": "Age",
+    "location": "Location (Optional)",
+    "emergencyContactName": "Emergency Contact Name (Optional)",
+    "emergencyContactPhone": "Emergency Contact Phone (Optional)",
     "rememberMe": "Remember me",
-    "forgotPassword": "Forgot Password?",
+    "forgotPassword": "Forgot password?",
     "loginButton": "Sign In",
+    "signingIn": "Signing In...",
     "registerButton": "Create Account",
+    "creatingAccount": "Creating Account...",
     "alreadyHaveAccount": "Already have an account?",
     "dontHaveAccount": "Don't have an account?",
-    "orContinueWith": "Or continue with"
+    "signInHere": "Sign in here",
+    "createOneHere": "Create one here",
+    "orContinueWith": "or continue with",
+    "orSignUpWith": "or sign up with",
+    "google": "Google",
+    "facebook": "Facebook",
+    "termsAgree": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "demoCredentials": "Demo Credentials",
+    "demoEmail": "Email: demo@mindcare.com",
+    "demoPassword": "Password: password123",
+    "roleHint": "Switch roles above to explore student, counselor, or admin flows.",
+    "welcomeBack": "Welcome Back to WellSetu",
+    "journeyContinues": "Your journey to wellness continues here",
+    "joinToday": "Join WellSetu Today",
+    "startJourney": "Start your journey to better mental wellness",
+    "benefits": {
+      "aiSupport": "AI-powered support sessions",
+      "trackProgress": "Track your mental health progress",
+      "privateSecure": "100% private and secure",
+      "evidenceBased": "Evidence-based tools and resources"
+    },
+    "roles": {
+      "student": "Student",
+      "studentDesc": "Full access to personal wellness tools and trackers.",
+      "counselor": "Peer Counselor",
+      "counselorDesc": "Guide cohorts, review check-ins, and facilitate circles.",
+      "admin": "Admin",
+      "adminDesc": "Monitor analytics and manage institute-wide programs."
+    },
+    "placeholders": {
+      "enterEmail": "Enter your email",
+      "enterPassword": "Enter your password",
+      "createPassword": "Create a password",
+      "confirmPassword": "Confirm your password",
+      "enterFirstName": "Enter your first name",
+      "enterLastName": "Enter your last name",
+      "yourAge": "Your age",
+      "cityState": "City, State",
+      "emergencyName": "Emergency contact name",
+      "emergencyPhone": "Emergency contact phone"
+    },
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Please enter a valid email",
+      "passwordRequired": "Password is required",
+      "passwordLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "ageRequired": "Age is required",
+      "ageMinimum": "You must be at least 13 years old",
+      "termsRequired": "You must agree to the terms and conditions",
+      "loginFailed": "Invalid email or password. Please try again.",
+      "registerFailed": "Registration failed. Please try again."
+    }
+  },
+  "dashboard": {
+    "loginRequired": "Please log in to view your dashboard",
+    "welcomeBack": "Welcome back",
+    "streakText": "day streak of self-care!",
+    "todaysMood": "Today's Mood",
+    "logTodaysMood": "Log Today's Mood",
+    "quickActions": "Quick Actions",
+    "logMood": "Log Mood",
+    "trackFeeling": "Track how you're feeling",
+    "startChat": "Start Chat",
+    "talkToAI": "Talk to AI therapist",
+    "doExercise": "Do Exercise",
+    "practiceMindfulness": "Practice mindfulness",
+    "writeJournal": "Write Journal",
+    "reflectOnDay": "Reflect on your day",
+    "thisWeeksGoals": "This Week's Goals",
+    "viewAll": "View All",
+    "completed": "completed",
+    "weeklyMoodTrends": "Weekly Mood Trends",
+    "viewDetails": "View Details",
+    "recentActivity": "Recent Activity",
+    "yourInsights": "Your Insights",
+    "goals": {
+      "dailyMeditation": "Daily Meditation",
+      "moodCheckins": "Mood Check-ins",
+      "journalEntries": "Journal Entries",
+      "exerciseSessions": "Exercise Sessions"
+    },
+    "activities": {
+      "moodCheckin": "Mood Check-in",
+      "feelingGood": "Feeling good today!",
+      "aiTherapy": "AI Therapy Session",
+      "anxietyTechniques": "Discussed anxiety management techniques",
+      "breathingExercise": "Breathing Exercise",
+      "deepBreathing": "Completed 10-minute deep breathing",
+      "journalEntry": "Journal Entry",
+      "reflectedExperiences": "Reflected on today's experiences"
+    },
+    "insights": {
+      "moodImproving": "Mood Improving",
+      "moodImprovingDesc": "Your mood has increased by 20% this week compared to last week.",
+      "consistentCheckins": "Consistent Check-ins",
+      "consistentCheckinsDesc": "Great job logging your mood daily! Consistency helps track patterns.",
+      "recommendation": "Recommendation",
+      "recommendationDesc": "Consider adding more meditation sessions to help with stress management."
+    }
+  },
+  "chat": {
+    "loginRequired": "Please log in to chat with our AI therapist",
+    "loginDescription": "Our AI companion is here to provide 24/7 mental health support",
+    "serenityAI": "SerenityAI",
+    "aiWellbeingGuide": "AI Well-being Guide",
+    "createCalmerHeadspace": "let's create a calmer headspace.",
+    "trustedCoPilot": "Trusted mental health co-pilot",
+    "liveConfidential": "Live • Confidential • Trauma-informed",
+    "sessionStarted": "Session started at",
+    "typePlaceholder": "Type your message... (Press Enter to send, Shift+Enter for new line)",
+    "listening": "Listening...",
+    "downloadChat": "Download chat history",
+    "clearChat": "Clear chat",
+    "newSession": "New session",
+    "clearConfirm": "Are you sure you want to clear the chat history?",
+    "speechNotSupported": "Speech recognition is not supported in your browser.",
+    "heroStats": {
+      "avgResponse": "Avg response time",
+      "responseTime": "< 30 sec",
+      "staysSync": "Stays in sync with you",
+      "contextDepth": "Context depth",
+      "contextTurns": "8 turns",
+      "keepsNuances": "Keeps recent nuances",
+      "careRating": "Care rating",
+      "ratingValue": "4.9 / 5",
+      "communityFeedback": "Community feedback"
+    },
+    "moods": {
+      "steady": "Steady-ish",
+      "steadyDesc": "Need gentle reflection",
+      "overwhelmed": "Overwhelmed",
+      "overwhelmedDesc": "Need grounding support",
+      "anxious": "Anxious",
+      "anxiousDesc": "Need calming plan",
+      "drained": "Drained",
+      "drainedDesc": "Need restoration idea"
+    },
+    "sections": {
+      "startPrompt": "Start with a guided prompt",
+      "resumeSession": "Resume session",
+      "moodCheckin": "Mood check-in",
+      "moodCheckinDesc": "Instantly tailor the conversation",
+      "guidedPrompts": "Guided prompts",
+      "guidedPromptsDesc": "Tap to auto-fill the message box",
+      "microPractice": "Micro-practice",
+      "nextIdea": "Next idea",
+      "tryNow": "Try this now"
+    },
+    "footer": {
+      "empathetic": "Empathetic AI trained on therapeutic techniques",
+      "evidenceBased": "Evidence-based mental health support",
+      "available247": "Available 24/7 for your well-being"
+    },
+    "disclaimer": "This AI assistant provides supportive conversations but is not a substitute for professional therapy or medical advice. If you're experiencing a mental health crisis, please contact a mental health professional or emergency services.",
+    "disclaimerLabel": "Disclaimer:",
+    "heroDescription": "blends attentive listening with real-time micro-practices so you can steady your thoughts, rehearse difficult moments, and protect your energy without judgment.",
+    "greeting": "I'll keep things calm, clear, and confidential. Share what's on your mind or tap a prompt to begin.",
+    "quickPrompts": [
+      "Can you guide me through a breathing exercise?",
+      "I need help processing something difficult.",
+      "Help me prepare for a challenging conversation.",
+      "I'd like to reflect on my week.",
+      "Can you help me plan my next therapy session agenda?"
+    ],
+    "wellnessTips": {
+      "breathe": {
+        "title": "5-4-3-2-1 Grounding",
+        "description": "Notice 5 things you can see, 4 you hear, 3 you feel, 2 you smell, and 1 you taste.",
+        "prompt": "Walk me through the 5-4-3-2-1 grounding exercise."
+      },
+      "thought": {
+        "title": "Thought Defusion",
+        "description": "Preface an anxious thought with 'I notice I'm having the thought that...'",
+        "prompt": "Teach me about thought defusion."
+      },
+      "kindness": {
+        "title": "Self-Kindness Pause",
+        "description": "Place a hand on your heart and say: 'This is a moment of difficulty. May I be kind to myself.'",
+        "prompt": "Guide me through self-compassion practice."
+      }
+    },
+    "moodResponses": {
+      "steady": {
+        "prompt": "I'm feeling okay, maybe just need some gentle reflection.",
+        "response": "That's a great place to be. Gentle reflection can help maintain balance. Would you like to explore what's been helping you feel this way, or perhaps do a light gratitude exercise?"
+      },
+      "overwhelmed": {
+        "prompt": "I'm feeling really overwhelmed right now.",
+        "response": "I hear you — feeling overwhelmed can be exhausting. Let's take this one breath at a time. Would you like to try a quick grounding exercise, or would you prefer to talk through what's on your plate?"
+      },
+      "anxious": {
+        "prompt": "I'm feeling anxious and need some help calming down.",
+        "response": "Thank you for sharing that with me. Anxiety can feel very intense, but you're not alone. Let's work together to find some calm. Would a breathing exercise help, or shall we explore what's triggering these feelings?"
+      },
+      "drained": {
+        "prompt": "I'm feeling really drained and low on energy.",
+        "response": "It sounds like you've been running on empty. Rest is not laziness — it's essential. Would you like some gentle suggestions for restoration, or would you prefer to just talk about what's been draining you?"
+      }
+    },
+    "curatedBy": "Curated by"
+  },
+  "moodTracker": {
+    "loginRequired": "Please log in to track your mood",
+    "pageTitle": "Mood Tracker",
+    "pageDescription": "Track your emotional well-being and discover patterns in your mental health",
+    "howFeeling": "How are you feeling?",
+    "todaysOverview": "Today's Mood Overview",
+    "categories": {
+      "overallMood": "Overall Mood",
+      "anxietyLevel": "Anxiety Level",
+      "energyLevel": "Energy Level",
+      "sleepQuality": "Sleep Quality",
+      "stressLevel": "Stress Level",
+      "socialConnection": "Social Connection"
+    },
+    "levels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "triggers": {
+      "title": "What influenced your mood today?",
+      "common": "Common Triggers:",
+      "addCustom": "Add custom trigger...",
+      "selected": "Selected Triggers:",
+      "items": {
+        "work": "Work/Study",
+        "relationships": "Relationships",
+        "health": "Health",
+        "sleep": "Sleep",
+        "exercise": "Exercise",
+        "diet": "Diet",
+        "weather": "Weather",
+        "social": "Social",
+        "family": "Family",
+        "finances": "Finances",
+        "news": "News/Media",
+        "other": "Other"
+      }
+    },
+    "notes": {
+      "title": "Additional Notes",
+      "placeholder": "How was your day? Any thoughts or feelings you'd like to record?"
+    },
+    "buttons": {
+      "update": "Update Entry",
+      "save": "Save Entry"
+    },
+    "success": "Mood entry saved successfully!",
+    "analytics": {
+      "title": "Mood Analytics",
+      "hide": "Hide",
+      "show": "Show",
+      "moodLog": "Mood Log",
+      "trends": "14-Day Mood Trends",
+      "overallMood": "Overall Mood",
+      "energy": "Energy",
+      "lowAnxiety": "Low Anxiety",
+      "calendar": "Mood Calendar",
+      "recentEntries": "Recent Entries"
+    }
+  },
+  "journal": {
+    "loginRequired": "Please log in to access your personal journal",
+    "loginDescription": "Write, reflect, and track your mental health journey",
+    "pageTitle": "Personal Journal",
+    "pageDescription": "Your private space for reflection, growth, and mental wellness",
+    "writingPrompts": "Writing Prompts",
+    "export": "Export",
+    "newEntry": "New Entry",
+    "close": "Close",
+    "editEntry": "Edit Entry",
+    "newJournalEntry": "New Journal Entry",
+    "titlePlaceholder": "Entry title...",
+    "contentPlaceholder": "Start writing your thoughts...",
+    "howFeeling": "How are you feeling?",
+    "tags": "Tags",
+    "addTag": "Add a tag...",
+    "commonTags": "Common tags:",
+    "selectedTags": "Selected tags:",
+    "privacy": "Privacy",
+    "keepPrivate": "Keep this entry private",
+    "wordCount": "Words:",
+    "cancel": "Cancel",
+    "updateEntry": "Update Entry",
+    "saveEntry": "Save Entry",
+    "searchPlaceholder": "Search entries...",
+    "allTags": "All Tags",
+    "allMoods": "All Moods",
+    "noEntries": "No journal entries found",
+    "startWriting": "Start writing to capture your thoughts and feelings",
+    "writeFirst": "Write First Entry",
+    "deleteConfirm": "Are you sure you want to delete this journal entry?",
+    "moods": {
+      "veryLow": "Very Low",
+      "low": "Low",
+      "belowAverage": "Below Average",
+      "neutral": "Neutral",
+      "average": "Average",
+      "good": "Good",
+      "veryGood": "Very Good",
+      "great": "Great",
+      "excellent": "Excellent",
+      "amazing": "Amazing"
+    }
+  },
+  "exercises": {
+    "loginRequired": "Please log in to access mental health exercises",
+    "loginDescription": "Guided meditation, breathing exercises, and relaxation techniques",
+    "pageTitle": "Mental Health Exercises",
+    "pageDescription": "Evidence-based techniques for relaxation, mindfulness, and stress reduction",
+    "categories": {
+      "all": "All Exercises",
+      "breathing": "Breathing",
+      "meditation": "Meditation",
+      "relaxation": "Relaxation",
+      "mindfulness": "Mindfulness"
+    },
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "controls": {
+      "resume": "Resume",
+      "pause": "Pause",
+      "restart": "Restart",
+      "stop": "Stop",
+      "disableSound": "Disable sound",
+      "enableSound": "Enable sound"
+    },
+    "benefits": "Benefits:",
+    "instructions": "Instructions:",
+    "inProgress": "In Progress",
+    "startExercise": "Start Exercise",
+    "recentCompletions": "Recent Completions",
+    "completed": "Completed"
+  },
+  "appointments": {
+    "loginRequired": "Please log in to manage your appointments",
+    "loginDescription": "Schedule and track your mental health appointments",
+    "carePlanner": "Care planner",
+    "pageTitle": "Appointments",
+    "pageDescription": "Keep every session aligned with your routine and surface what needs attention next.",
+    "newAppointment": "New Appointment",
+    "nextSession": "Next session",
+    "noUpcoming": "No upcoming sessions",
+    "completedLabel": "Completed",
+    "careTeam": "Care team",
+    "provider": "provider",
+    "providers": "providers",
+    "overview": {
+      "progressSnapshot": "Progress snapshot",
+      "scheduled": "Scheduled",
+      "missed": "Missed",
+      "monthView": "A clear view of where the month stands so far."
+    },
+    "reminders": {
+      "title": "Care reminders",
+      "noReminders": "We'll highlight preparation steps once new sessions are booked.",
+      "options": {
+        "none": "No reminder",
+        "atTime": "At time of appointment",
+        "min15": "15 minutes before",
+        "min30": "30 minutes before",
+        "hour1": "1 hour before",
+        "day1": "1 day before"
+      }
+    },
+    "calendar": {
+      "title": "Calendar View",
+      "appointments": "Appointments",
+      "noAppointments": "No appointments on this date"
+    },
+    "list": {
+      "title": "All Appointments",
+      "search": "Search appointments...",
+      "allTypes": "All Types"
+    },
+    "types": {
+      "inPerson": "In-Person",
+      "videoCall": "Video Call",
+      "phoneCall": "Phone Call"
+    },
+    "status": {
+      "completed": "completed",
+      "missed": "missed",
+      "cancelled": "cancelled",
+      "scheduled": "scheduled"
+    },
+    "actions": {
+      "markDone": "Mark done",
+      "markMissed": "Mark missed",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "modal": {
+      "editTitle": "Edit Appointment",
+      "newTitle": "New Appointment",
+      "title": "Title",
+      "titlePlaceholder": "e.g., Therapy Session",
+      "counselor": "Counselor/Provider",
+      "counselorPlaceholder": "e.g., Dr. Smith",
+      "date": "Date",
+      "time": "Time",
+      "type": "Type",
+      "reminder": "Reminder",
+      "notes": "Notes",
+      "notesPlaceholder": "Any notes about this appointment...",
+      "cancel": "Cancel",
+      "update": "Update Appointment",
+      "schedule": "Schedule Appointment"
+    },
+    "cancelConfirm": "Are you sure you want to cancel this appointment?"
+  },
+  "profile": {
+    "loading": "Loading your profile…",
+    "errorLoading": "We couldn't build your profile just yet. Please try refreshing.",
+    "offlineMode": "Offline mode:",
+    "offlineDesc": "Showing a demo profile while we reconnect to your data.",
+    "activeMember": "Active member",
+    "campusMember": "Campus Member",
+    "panels": {
+      "lastCheckin": "Last mindful check-in",
+      "startReflection": "Start a reflection today",
+      "nextSession": "Next session",
+      "notScheduled": "Not scheduled",
+      "addSession": "Add a session"
+    },
+    "highlights": {
+      "currentMood": "Current mood",
+      "moodDesc": "Daily check-ins keep us tuned in",
+      "streak": "Reflection streak",
+      "streakDesc": "Consistency unlocks insights",
+      "nextSupport": "Next support touchpoint",
+      "noCalendar": "Nothing on the calendar"
+    },
+    "metrics": {
+      "wellnessScore": "Wellness score",
+      "sleepConsistency": "Sleep consistency",
+      "journalsLogged": "Journals logged",
+      "peerSupport": "Peer support"
+    },
+    "cards": {
+      "personalInsights": "Personal insights",
+      "personalInsightsDesc": "Key details that help your support team personalize care.",
+      "focusAreas": "Focus areas",
+      "focusAreasDesc": "Active routines and practices you're nurturing.",
+      "supportCircle": "Support circle",
+      "supportCircleDesc": "Your go-to people and how to reach them quickly.",
+      "recentActivity": "Recent activity",
+      "recentActivityDesc": "Moments you logged or sessions you attended.",
+      "growthPlan": "Growth plan",
+      "growthPlanDesc": "Keep track of the intentions you set with your counselor."
+    },
+    "fields": {
+      "fullName": "Full name",
+      "email": "Email",
+      "age": "Age",
+      "location": "Location",
+      "college": "College",
+      "memberSince": "Member since",
+      "interests": "Interests"
+    },
+    "status": {
+      "inProgress": "In progress",
+      "scheduled": "Scheduled",
+      "celebrated": "Celebrated",
+      "complete": "complete"
+    }
+  },
+  "emergency": {
+    "crisisBanner": {
+      "title": "Are you in immediate danger?",
+      "description": "If you're having thoughts of suicide or self-harm, please reach out for help immediately.",
+      "callEmergency": "Call Emergency"
+    },
+    "pageTitle": "Crisis Support & Emergency Resources",
+    "pageDescription": "Immediate help and support for mental health emergencies",
+    "emergencyContacts": "Emergency Contacts",
+    "callNow": "Call Now",
+    "sendText": "Send Text",
+    "available247": "24/7 Available",
+    "crisisSigns": {
+      "title": "Recognizing Crisis Signs",
+      "immediateDanger": "Immediate Danger Signs",
+      "warningSigns": "Warning Signs",
+      "seekHelp": "If you or someone you know is showing these signs, it's important to seek help immediately. Don't wait for the situation to worsen."
+    },
+    "copingStrategies": {
+      "title": "Immediate Coping Strategies"
+    },
+    "safetyPlan": {
+      "title": "Create Your Safety Plan",
+      "workWith": "Work with a mental health professional to create a personalized safety plan.",
+      "download": "Download Safety Plan Template"
+    },
+    "additionalResources": {
+      "title": "Additional Resources",
+      "professionals": {
+        "title": "Mental Health Professionals",
+        "description": "Find qualified therapists and counselors in your area",
+        "link": "Find a Therapist"
+      },
+      "supportGroups": {
+        "title": "Support Groups",
+        "description": "Connect with others who understand what you're going through",
+        "link": "Find Support Groups"
+      },
+      "onlineResources": {
+        "title": "Online Resources",
+        "description": "Educational materials and self-help tools",
+        "link": "Mental Health Information"
+      },
+      "mobileApps": {
+        "title": "Mobile Apps",
+        "description": "Crisis support and mental health apps for your phone",
+        "link": "Recommended Apps"
+      }
+    },
+    "disclaimer": "This page provides emergency resources and information. If you are in immediate danger, please call emergency services (108) immediately. This is not a substitute for professional medical advice or emergency care."
+  },
+  "peerSupport": {
+    "authRequired": {
+      "title": "Join Our Peer Support Community",
+      "description": "Connect with fellow students in a safe, moderated environment",
+      "feature1": "Moderated by student volunteers",
+      "feature2": "Anonymous discussions",
+      "feature3": "Supportive community",
+      "loginPrompt": "Please log in to participate in discussions and get support from your peers"
+    },
+    "pageTitle": "Peer Support Forum",
+    "pageDescription": "Connect with fellow students in a safe, moderated community",
+    "activeDiscussions": "Active Discussions",
+    "communityMembers": "200+ Community Members",
+    "moderatedBy": "Student Volunteer Moderated",
+    "newDiscussion": "New Discussion",
+    "guidelines": {
+      "title": "Community Guidelines",
+      "respectful": "Be respectful and supportive",
+      "anonymous": "Anonymous & confidential",
+      "moderated": "Moderated by volunteers",
+      "report": "Report inappropriate content"
+    },
+    "tabs": {
+      "discussions": "Discussions",
+      "trending": "Trending",
+      "resources": "Resources"
+    },
+    "filters": {
+      "smart": "Smart filters",
+      "description": "Navigate community conversations with precision",
+      "help": "Use the search and category chips to jump into topics that matter right now.",
+      "dynamic": "Dynamic filters",
+      "matches": "matches",
+      "searchPlaceholder": "Search discussions, topics, or tags...",
+      "sortOrder": "Sort order",
+      "mostRecent": "Most Recent",
+      "mostPopular": "Most Popular",
+      "mostReplies": "Most Replies"
+    },
+    "categories": {
+      "all": "All",
+      "anxiety": "Anxiety",
+      "depression": "Depression",
+      "stress": "Stress",
+      "relationships": "Relationships",
+      "academic": "Academic",
+      "general": "General"
+    },
+    "post": {
+      "pinned": "Pinned",
+      "views": "views",
+      "minutesAgo": "minutes ago",
+      "hoursAgo": "hours ago",
+      "daysAgo": "days ago",
+      "replies": "replies",
+      "share": "Share",
+      "save": "Save",
+      "readMore": "Read more",
+      "showLess": "Show less",
+      "repliesSection": "Replies",
+      "studentVolunteer": "Student Volunteer"
+    },
+    "sections": {
+      "featuredBy": "Featured by moderators",
+      "pinnedDiscussions": "Pinned discussions",
+      "pinnedDesc": "Important conversations surfaced for quick attention.",
+      "liveTopics": "live topics",
+      "recentDiscussions": "Recent discussions",
+      "recentDesc": "Fresh conversations from across the community."
+    },
+    "emptyState": {
+      "title": "No discussions found",
+      "description": "Be the first to start a conversation in this category!",
+      "button": "Start a Discussion"
+    },
+    "modal": {
+      "title": "Start a New Discussion",
+      "category": "Category",
+      "discussionTitle": "Discussion Title",
+      "titlePlaceholder": "Write a clear, descriptive title for your discussion...",
+      "yourMessage": "Your Message",
+      "messagePlaceholder": "Share what's on your mind. Our community is here to support you...",
+      "characters": "characters",
+      "privacyTitle": "Privacy & Moderation",
+      "privacyItems": {
+        "anonymous": "Your post will be anonymous to other users",
+        "moderated": "All posts are reviewed by volunteer moderators",
+        "confidential": "This is a safe space - be kind and supportive"
+      },
+      "cancel": "Cancel",
+      "submit": "Submit for Review"
+    }
   },
   "footer": {
-    "aboutUs": "About StudentMind Connect",
-    "aboutDescription": "StudentMind Connect is a comprehensive mental health platform designed specifically for students, providing accessible, professional, and peer support resources.",
+    "brandName": "WellSetu",
+    "brandDescription": "Your trusted companion for mental health and psychological well-being.",
+    "aboutUs": "About WellSetu",
+    "aboutDescription": "WellSetu is a comprehensive mental health platform designed specifically for students, providing accessible, professional, and peer support resources.",
+    "stats": {
+      "usersHelped": "10K+ Users Helped",
+      "licensed": "Licensed Professionals",
+      "confidential": "100% Confidential"
+    },
     "quickLinks": "Quick Links",
-    "support": "Support & Help",
+    "home": "Home",
+    "resources": "Resources",
+    "crisisSupport": "Crisis Support",
+    "aiTherapy": "AI Therapy",
+    "support": "Support",
     "helpCenter": "Help Center",
     "contactSupport": "Contact Support",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
+    "faq": "FAQ",
+    "contactUs": "Contact Us",
     "emergencyContacts": "Emergency Contacts",
     "nationalSuicidePrevention": "National Suicide Prevention Lifeline",
+    "suicideNumber": "1800-599-0019",
     "crisisTextLine": "Crisis Text Line",
+    "crisisText": "Text HOME to 741741",
     "localEmergency": "Local Emergency Services",
-    "copyrightText": "© 2024 StudentMind Connect. All rights reserved.",
-    "disclaimer": "StudentMind Connect provides mental health resources and support but is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified health providers with any questions you may have regarding a medical condition. If you are experiencing a mental health emergency, please contact emergency services immediately."
+    "emergencyServices": "Emergency Services",
+    "emergencyNumber": "108",
+    "contactInfo": "Contact Info",
+    "copyright": "© 2025 WellSetu. All rights reserved. Your mental health matters.",
+    "copyrightText": "© 2025 WellSetu. All rights reserved.",
+    "disclaimer": "WellSetu provides mental health resources and support but is not a substitute for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified health providers with any questions you may have regarding a medical condition. If you are experiencing a mental health emergency, please contact emergency services immediately."
   },
   "screening": {
     "title": "Mental Health Screening Tests",
@@ -115,13 +768,38 @@
     "searchPlaceholder": "Search resources...",
     "allCategories": "All Categories",
     "region": "Region",
-    "videoResources": "Video Resources - Hindi",
+    "videoResources": "Video Resources",
     "audioCategories": {
       "meditation": "Meditation",
-      "relaxation": "Relaxation", 
+      "relaxation": "Relaxation",
       "focus": "Focus",
       "sleep": "Sleep"
     },
     "foundationInfo": "Foundation Information"
+  },
+  "common": {
+    "login": "Login",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success!",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "view": "View",
+    "download": "Download",
+    "share": "Share",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK"
   }
 }

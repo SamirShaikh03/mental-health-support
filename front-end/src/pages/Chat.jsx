@@ -17,8 +17,10 @@ import {
   faLightbulb
 } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 export default function Chat({ user }) {
+  const { t } = useTranslation();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -30,73 +32,67 @@ export default function Chat({ user }) {
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
-  const assistantName = "SerenityAI";
+  const assistantName = t('chat.serenityAI');
   const displayName = user?.name?.split(' ')[0] || 'friend';
 
   const heroStats = [
-    { icon: faClock, label: 'Avg response time', value: '< 30 sec', detail: 'Stays in sync with you' },
-    { icon: faCommentDots, label: 'Context depth', value: '8 turns', detail: 'Keeps recent nuances' },
-    { icon: faShieldHeart, label: 'Care rating', value: '4.9 / 5', detail: 'Community feedback' }
+    { icon: faClock, label: t('chat.heroStats.avgResponse'), value: t('chat.heroStats.responseTime'), detail: t('chat.heroStats.staysSync') },
+    { icon: faCommentDots, label: t('chat.heroStats.contextDepth'), value: t('chat.heroStats.contextTurns'), detail: t('chat.heroStats.keepsNuances') },
+    { icon: faShieldHeart, label: t('chat.heroStats.careRating'), value: t('chat.heroStats.ratingValue'), detail: t('chat.heroStats.communityFeedback') }
   ];
 
   const moodOptions = [
     {
       id: 'steady',
       emoji: '🌤️',
-      label: 'Steady-ish',
-      helper: 'Need gentle reflection',
-      prompt: "Mood check-in: I'm feeling relatively steady but would like a reflective prompt.",
-      response: 'Noted. Let’s build on that steadiness with a grounding reflection—what would you like to appreciate about yourself today?'
+      label: t('chat.moods.steady'),
+      helper: t('chat.moods.steadyDesc'),
+      prompt: t('chat.moodResponses.steady.prompt'),
+      response: t('chat.moodResponses.steady.response')
     },
     {
       id: 'overwhelmed',
       emoji: '🌧️',
-      label: 'Overwhelmed',
-      helper: 'Need grounding support',
-      prompt: 'Mood check-in: I feel overwhelmed and would like grounding guidance.',
-      response: 'Thanks for letting me know. Let’s slow things down: inhale for 4, hold for 4, exhale for 6. Want to name one worry we can deconstruct together?'
+      label: t('chat.moods.overwhelmed'),
+      helper: t('chat.moods.overwhelmedDesc'),
+      prompt: t('chat.moodResponses.overwhelmed.prompt'),
+      response: t('chat.moodResponses.overwhelmed.response')
     },
     {
       id: 'anxious',
       emoji: '⚡',
-      label: 'Anxious',
-      helper: 'Need calming plan',
-      prompt: 'Mood check-in: Anxiety feels high and I need a calming plan.',
-      response: 'Understood. We can pair a breathing cycle with a thought reframe. What trigger showed up most recently?'
+      label: t('chat.moods.anxious'),
+      helper: t('chat.moods.anxiousDesc'),
+      prompt: t('chat.moodResponses.anxious.prompt'),
+      response: t('chat.moodResponses.anxious.response')
     },
     {
       id: 'drained',
       emoji: '🌙',
-      label: 'Drained',
-      helper: 'Need restoration idea',
-      prompt: 'Mood check-in: Energy is low; I need a restorative micro-ritual.',
-      response: 'Let’s protect your energy. We can design a 10-minute decompression ritual—shall we start with environment or emotions?'
+      label: t('chat.moods.drained'),
+      helper: t('chat.moods.drainedDesc'),
+      prompt: t('chat.moodResponses.drained.prompt'),
+      response: t('chat.moodResponses.drained.response')
     }
   ];
 
-  const quickPrompts = [
-    'Guide me through a two-minute grounding exercise.',
-    'Help me reframe a stressful thought I am stuck on.',
-    'Plan tonight’s wind-down so I can actually rest.',
-    'Coach me before a difficult conversation I am nervous about.',
-    'How can I set a compassionate boundary today?'
-  ];
+  const quickPrompts = t('chat.quickPrompts', { returnObjects: true });
 
   const wellnessTips = [
     {
-      title: 'Micro-grounding reset',
-      description: 'Name 5 things you can see, 4 you can touch, 3 you can hear. Pair it with a slow exhale to calm your nervous system.',
-      prompt: 'Can you walk me through the 5-4-3 grounding technique right now?'
+      title: t('chat.wellnessTips.breathe.title'),
+      description: t('chat.wellnessTips.breathe.description'),
+      prompt: t('chat.wellnessTips.breathe.prompt')
     },
     {
-      title: 'Box breathing focus',
-      description: 'Inhale 4 • Hold 4 • Exhale 6 • Rest 2. Repeat three rounds to lower cortisol and regain clarity before responding.',
-      prompt: 'Lead me through three rounds of box breathing and add an empowering affirmation.'
+      title: t('chat.wellnessTips.thought.title'),
+      description: t('chat.wellnessTips.thought.description'),
+      prompt: t('chat.wellnessTips.thought.prompt')
     },
     {
-      title: 'Energy audit',
-      description: 'Track your energy on a 1–10 scale every 3 hours today. Jot what raised or drained it to spot hidden patterns.',
-      prompt: 'Help me design a quick energy audit template I can use today.'
+      title: t('chat.wellnessTips.kindness.title'),
+      description: t('chat.wellnessTips.kindness.description'),
+      prompt: t('chat.wellnessTips.kindness.prompt')
     }
   ];
 
@@ -143,7 +139,7 @@ export default function Chat({ user }) {
 
     if (withGreeting && user) {
       const greeting = createBotMessage(
-        `Hi ${displayName}, I'm ${assistantName}. I’ll keep things calm, clear, and confidential. Share what’s on your mind or tap a prompt to begin.`,
+        `Hi ${displayName}, ${t('chat.greeting')}`,
         'welcome'
       );
       setMessages([greeting]);
@@ -309,12 +305,12 @@ export default function Chat({ user }) {
       
       recognition.start();
     } else {
-      alert('Speech recognition is not supported in your browser.');
+      alert(t('chat.speechNotSupported'));
     }
   };
 
   const clearChat = () => {
-    if (window.confirm('Are you sure you want to clear the chat history?')) {
+    if (window.confirm(t('chat.clearConfirm'))) {
       startNewSession();
     }
   };
@@ -396,8 +392,8 @@ export default function Chat({ user }) {
         <div className="container">
           <div className="auth-required">
             <FontAwesomeIcon icon={faRobot} size="3x" />
-            <h2>Please log in to chat with our AI therapist</h2>
-            <p>Our AI companion is here to provide 24/7 mental health support</p>
+            <h2>{t('chat.loginRequired')}</h2>
+            <p>{t('chat.loginDescription')}</p>
           </div>
         </div>
       </div>
@@ -409,17 +405,17 @@ export default function Chat({ user }) {
       <div className="container">
         <section className="chat-hero-panel">
           <div className="chat-hero-copy">
-            <div className="chat-hero-eyebrow">{assistantName} • AI Well-being Guide</div>
-            <h1>Hi {displayName}, let’s create a calmer headspace.</h1>
+            <div className="chat-hero-eyebrow">{assistantName} • {t('chat.aiWellbeingGuide')}</div>
+            <h1>Hi {displayName}, {t('chat.createCalmerHeadspace')}</h1>
             <p>
-              {assistantName} blends attentive listening with real-time micro-practices so you can steady your thoughts, rehearse difficult moments, and protect your energy without judgment.
+              {assistantName} {t('chat.heroDescription')}
             </p>
             <div className="hero-actions">
-              <button className="hero-btn primary" onClick={() => handlePromptClick('Can you help me plan my next therapy session agenda?')}>
-                Start with a guided prompt
+              <button className="hero-btn primary" onClick={() => handlePromptClick(quickPrompts[4] || 'Can you help me plan my next therapy session agenda?')}>
+                {t('chat.sections.startPrompt')}
               </button>
               <button className="hero-btn ghost" onClick={scrollToBottom}>
-                Resume session
+                {t('chat.sections.resumeSession')}
               </button>
             </div>
           </div>
@@ -442,8 +438,8 @@ export default function Chat({ user }) {
         <section className="chat-utilities-grid">
           <div className="mood-panel">
             <div className="panel-header">
-              <h4>Mood check-in</h4>
-              <span>Instantly tailor the conversation</span>
+              <h4>{t('chat.sections.moodCheckin')}</h4>
+              <span>{t('chat.sections.moodCheckinDesc')}</span>
             </div>
             <div className="mood-chips">
               {moodOptions.map((option) => (
@@ -464,12 +460,12 @@ export default function Chat({ user }) {
 
           <div className="prompt-panel">
             <div className="panel-header">
-              <h4>Guided prompts</h4>
-              <span>Tap to auto-fill the message box</span>
+              <h4>{t('chat.sections.guidedPrompts')}</h4>
+              <span>{t('chat.sections.guidedPromptsDesc')}</span>
             </div>
             <div className="prompt-chips">
-              {quickPrompts.map((prompt) => (
-                <button key={prompt} className="prompt-pill" onClick={() => handlePromptClick(prompt)}>
+              {quickPrompts.map((prompt, index) => (
+                <button key={index} className="prompt-pill" onClick={() => handlePromptClick(prompt)}>
                   {prompt}
                 </button>
               ))}
@@ -478,8 +474,8 @@ export default function Chat({ user }) {
 
           <div className="tip-panel">
             <div className="panel-header">
-              <h4>Micro-practice</h4>
-              <span>Curated by {assistantName}</span>
+              <h4>{t('chat.sections.microPractice')}</h4>
+              <span>{t('chat.curatedBy')} {assistantName}</span>
             </div>
             <div className="tip-card">
               <div className="tip-icon">
@@ -488,9 +484,9 @@ export default function Chat({ user }) {
               <h5>{currentTip.title}</h5>
               <p>{currentTip.description}</p>
               <div className="tip-actions">
-                <button className="hero-btn ghost" onClick={cycleTip}>Next idea</button>
+                <button className="hero-btn ghost" onClick={cycleTip}>{t('chat.sections.nextIdea')}</button>
                 <button className="hero-btn primary" onClick={() => handlePromptClick(currentTip.prompt)}>
-                  Try this now
+                  {t('chat.sections.tryNow')}
                 </button>
               </div>
             </div>
@@ -511,14 +507,14 @@ export default function Chat({ user }) {
               </div>
               <div className="chat-details">
                 <p className="assistant-pill">{assistantName}</p>
-                <h2>Trusted mental health co-pilot</h2>
+                <h2>{t('chat.trustedCoPilot')}</h2>
                 <p className="status">
                   <span className="online-indicator"></span>
-                  Live • Confidential • Trauma-informed
+                  {t('chat.liveConfidential')}
                 </p>
                 {sessionStartTime && (
                   <p className="session-time">
-                    Session started at {formatTime(sessionStartTime)}
+                    {t('chat.sessionStarted')} {formatTime(sessionStartTime)}
                   </p>
                 )}
               </div>
@@ -528,21 +524,21 @@ export default function Chat({ user }) {
               <button 
                 className="action-btn"
                 onClick={downloadChatHistory}
-                title="Download chat history"
+                title={t('chat.downloadChat')}
               >
                 <FontAwesomeIcon icon={faDownload} />
               </button>
               <button 
                 className="action-btn"
                 onClick={clearChat}
-                title="Clear chat"
+                title={t('chat.clearChat')}
               >
                 <FontAwesomeIcon icon={faTrash} />
               </button>
               <button 
                 className="action-btn"
                 onClick={startNewSession}
-                title="New session"
+                title={t('chat.newSession')}
               >
                 <FontAwesomeIcon icon={faRefresh} />
               </button>
@@ -619,7 +615,7 @@ export default function Chat({ user }) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Type your message... (Press Enter to send, Shift+Enter for new line)"
+                placeholder={t('chat.typePlaceholder')}
                 rows={1}
                 disabled={isTyping}
               />
@@ -648,7 +644,7 @@ export default function Chat({ user }) {
             {isListening && (
               <div className="listening-indicator">
                 <FontAwesomeIcon icon={faMicrophone} />
-                <span>Listening...</span>
+                <span>{t('chat.listening')}</span>
               </div>
             )}
           </div>
@@ -658,22 +654,21 @@ export default function Chat({ user }) {
             <div className="footer-info">
               <div className="info-item">
                 <FontAwesomeIcon icon={faHeart} />
-                <span>Empathetic AI trained on therapeutic techniques</span>
+                <span>{t('chat.footer.empathetic')}</span>
               </div>
               <div className="info-item">
                 <FontAwesomeIcon icon={faBrain} />
-                <span>Evidence-based mental health support</span>
+                <span>{t('chat.footer.evidenceBased')}</span>
               </div>
               <div className="info-item">
                 <FontAwesomeIcon icon={faSmile} />
-                <span>Available 24/7 for your well-being</span>
+                <span>{t('chat.footer.available247')}</span>
               </div>
             </div>
             
             <div className="disclaimer">
               <small>
-                <strong>Disclaimer:</strong> This AI assistant provides supportive conversations but is not a substitute for professional therapy or medical advice. 
-                If you're experiencing a mental health crisis, please contact a mental health professional or emergency services.
+                <strong>{t('chat.disclaimerLabel')}</strong> {t('chat.disclaimer')}
               </small>
             </div>
           </div>

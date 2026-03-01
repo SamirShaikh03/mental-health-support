@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -93,6 +94,7 @@ const activityIcons = [faPenToSquare, faWind, faPeopleGroup];
 const planIcons = [faSeedling, faBullseye, faTrophy];
 
 export default function Profile() {
+  const { t } = useTranslation();
   const [profile, setProfile] = useState(null);
   const [state, setState] = useState("loading");
 
@@ -128,7 +130,7 @@ export default function Profile() {
       <div className="profile-page">
         <div className="profile-loading-state">
           <div className="profile-spinner" aria-hidden />
-          <p>Loading your profile…</p>
+          <p>{t('profile.loading')}</p>
         </div>
       </div>
     );
@@ -138,7 +140,7 @@ export default function Profile() {
     return (
       <div className="profile-page">
         <div className="profile-empty-state">
-          <p>We couldn’t build your profile just yet. Please try refreshing.</p>
+          <p>{t('profile.errorLoading')}</p>
         </div>
       </div>
     );
@@ -154,14 +156,14 @@ export default function Profile() {
   const recentActivity = ensureArray(profile.recentActivity, demoProfile.recentActivity);
   const growthPlan = ensureArray(profile.growthPlan, demoProfile.growthPlan);
   const infoFields = [
-    { label: "Full name", value: profile.name || "—", icon: faUser },
-    { label: "Email", value: profile.email || "—", icon: faEnvelope },
-    { label: "Age", value: profile.age ? `${profile.age} years` : "—", icon: faCakeCandles },
-    { label: "Location", value: profile.location || "—", icon: faLocationDot },
-    { label: "College", value: profile.college || profile.degree || "—", icon: faGraduationCap },
-    { label: "Member since", value: profile.joined || profile.joinDate || "—", icon: faCalendarDays },
+    { label: t('profile.fields.fullName'), value: profile.name || "—", icon: faUser },
+    { label: t('profile.fields.email'), value: profile.email || "—", icon: faEnvelope },
+    { label: t('profile.fields.age'), value: profile.age ? `${profile.age} years` : "—", icon: faCakeCandles },
+    { label: t('profile.fields.location'), value: profile.location || "—", icon: faLocationDot },
+    { label: t('profile.fields.college'), value: profile.college || profile.degree || "—", icon: faGraduationCap },
+    { label: t('profile.fields.memberSince'), value: profile.joined || profile.joinDate || "—", icon: faCalendarDays },
     {
-      label: "Interests",
+      label: t('profile.fields.interests'),
       value: Array.isArray(profile.interests) ? profile.interests.join(", ") : profile.interests || "—",
       icon: faStar,
     },
@@ -169,23 +171,23 @@ export default function Profile() {
 
   const highlightTiles = [
     {
-      label: "Current mood",
+      label: t('profile.highlights.currentMood'),
       value: profile.mood || "Steady focus",
-      meta: "Daily check-ins keep us tuned in",
+      meta: t('profile.highlights.moodDesc'),
       icon: faFaceSmile,
       accent: accentClasses[0],
     },
     {
-      label: "Reflection streak",
+      label: t('profile.highlights.streak'),
       value: profile.streak || "Start a streak",
-      meta: "Consistency unlocks insights",
+      meta: t('profile.highlights.streakDesc'),
       icon: faBolt,
       accent: accentClasses[2],
     },
     {
-      label: "Next support touchpoint",
-      value: profile.nextSession?.title || "Add a session",
-      meta: profile.nextSession?.date ? `${profile.nextSession.date} · ${profile.nextSession.time}` : "Nothing on the calendar",
+      label: t('profile.highlights.nextSupport'),
+      value: profile.nextSession?.title || t('profile.panels.addSession'),
+      meta: profile.nextSession?.date ? `${profile.nextSession.date} · ${profile.nextSession.time}` : t('profile.highlights.noCalendar'),
       icon: faCalendarCheck,
       accent: accentClasses[1],
     },
@@ -195,7 +197,7 @@ export default function Profile() {
     <div className="profile-page">
       {state === "fallback" && (
         <div className="profile-inline-alert" role="status">
-          <strong>Offline mode:</strong> Showing a demo profile while we reconnect to your data.
+          <strong>{t('profile.offlineMode')}</strong> {t('profile.offlineDesc')}
         </div>
       )}
 
@@ -213,8 +215,8 @@ export default function Profile() {
             <span className="profile-status-dot" aria-label="Active status" />
           </div>
           <div>
-            <p className="profile-pill">{profile.status || "Active member"}</p>
-            <h1>{profile.name || "Campus Member"}</h1>
+            <p className="profile-pill">{profile.status || t('profile.activeMember')}</p>
+            <h1>{profile.name || t('profile.campusMember')}</h1>
             <p className="profile-subtext">{profile.bio || demoProfile.bio}</p>
             <ul className="profile-tags">
               <li>{profile.pronouns || "they/them"}</li>
@@ -225,16 +227,16 @@ export default function Profile() {
         </div>
         <div className="profile-hero-panel">
           <div>
-            <span className="profile-panel-label">Last mindful check-in</span>
+            <span className="profile-panel-label">{t('profile.panels.lastCheckin')}</span>
             <p className="profile-panel-value">{profile.lastCheckIn || "—"}</p>
-            <p className="profile-panel-note">{profile.streak || "Start a reflection today"}</p>
+            <p className="profile-panel-note">{profile.streak || t('profile.panels.startReflection')}</p>
           </div>
           <div className="profile-panel-divider" />
           <div>
-            <span className="profile-panel-label">Next session</span>
-            <p className="profile-panel-value">{profile.nextSession?.date || "Not scheduled"}</p>
+            <span className="profile-panel-label">{t('profile.panels.nextSession')}</span>
+            <p className="profile-panel-value">{profile.nextSession?.date || t('profile.panels.notScheduled')}</p>
             <p className="profile-panel-note">
-              {profile.nextSession?.time ? `${profile.nextSession.time} · ${profile.nextSession.medium}` : profile.nextSession?.title || "Add a session"}
+              {profile.nextSession?.time ? `${profile.nextSession.time} · ${profile.nextSession.medium}` : profile.nextSession?.title || t('profile.panels.addSession')}
             </p>
           </div>
         </div>
@@ -275,8 +277,8 @@ export default function Profile() {
       <section className="profile-grid">
         <article className="profile-card profile-information">
           <header>
-            <h2>Personal insights</h2>
-            <p>Key details that help your support team personalize care.</p>
+            <h2>{t('profile.cards.personalInsights')}</h2>
+            <p>{t('profile.cards.personalInsightsDesc')}</p>
           </header>
           <dl>
             {infoFields.map((field) => (
@@ -295,8 +297,8 @@ export default function Profile() {
 
         <article className="profile-card profile-focus">
           <header>
-            <h2>Focus areas</h2>
-            <p>Active routines and practices you’re nurturing.</p>
+            <h2>{t('profile.cards.focusAreas')}</h2>
+            <p>{t('profile.cards.focusAreasDesc')}</p>
           </header>
           <ul>
             {focusAreas.map((item, index) => {
@@ -316,7 +318,7 @@ export default function Profile() {
                   {typeof item.progress === "number" && (
                     <div className="focus-progress">
                       <div style={{ width: `${item.progress}%` }} />
-                      <span>{item.progress}% complete</span>
+                      <span>{item.progress}% {t('profile.status.complete')}</span>
                     </div>
                   )}
                 </li>
@@ -329,8 +331,8 @@ export default function Profile() {
       <section className="profile-grid">
         <article className="profile-card profile-support">
           <header>
-            <h2>Support circle</h2>
-            <p>Your go-to people and how to reach them quickly.</p>
+            <h2>{t('profile.cards.supportCircle')}</h2>
+            <p>{t('profile.cards.supportCircleDesc')}</p>
           </header>
           <ul>
             {supportTeam.map((person, index) => {
@@ -359,8 +361,8 @@ export default function Profile() {
 
         <article className="profile-card profile-activity">
           <header>
-            <h2>Recent activity</h2>
-            <p>Moments you logged or sessions you attended.</p>
+            <h2>{t('profile.cards.recentActivity')}</h2>
+            <p>{t('profile.cards.recentActivityDesc')}</p>
           </header>
           <ul>
             {recentActivity.map((entry, index) => {
@@ -387,8 +389,8 @@ export default function Profile() {
 
       <section className="profile-card profile-plan">
         <header>
-          <h2>Growth plan</h2>
-          <p>Keep track of the intentions you set with your counselor.</p>
+          <h2>{t('profile.cards.growthPlan')}</h2>
+          <p>{t('profile.cards.growthPlanDesc')}</p>
         </header>
         <ul>
           {growthPlan.map((goal, index) => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faCalendar, 
@@ -20,6 +21,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { motion } from 'framer-motion';
 
 export default function Dashboard({ user }) {
+  const { t } = useTranslation();
   const [todayMood, setTodayMood] = useState(null);
   const [weeklyGoals, setWeeklyGoals] = useState([]);
   const [recentActivity, setRecentActivity] = useState([]);
@@ -41,43 +43,43 @@ export default function Dashboard({ user }) {
       ];
 
       const mockGoals = [
-        { id: 1, title: 'Daily Meditation', progress: 80, target: 7, completed: 6 },
-        { id: 2, title: 'Mood Check-ins', progress: 100, target: 7, completed: 7 },
-        { id: 3, title: 'Journal Entries', progress: 60, target: 5, completed: 3 },
-        { id: 4, title: 'Exercise Sessions', progress: 40, target: 3, completed: 1 }
+        { id: 1, title: t('dashboard.dailyMeditation'), progress: 80, target: 7, completed: 6 },
+        { id: 2, title: t('dashboard.moodCheckins'), progress: 100, target: 7, completed: 7 },
+        { id: 3, title: t('dashboard.journalEntries'), progress: 60, target: 5, completed: 3 },
+        { id: 4, title: t('dashboard.exerciseSessions'), progress: 40, target: 3, completed: 1 }
       ];
 
       const mockActivity = [
         { 
           id: 1, 
           type: 'mood', 
-          title: 'Mood Check-in', 
-          description: 'Feeling good today!', 
-          time: '2 hours ago',
+          title: t('dashboard.moodCheckin'), 
+          description: t('dashboard.feelingGood'), 
+          time: t('dashboard.hoursAgo', { count: 2 }),
           icon: faHeart 
         },
         { 
           id: 2, 
           type: 'chat', 
-          title: 'AI Therapy Session', 
-          description: 'Discussed anxiety management techniques', 
-          time: '1 day ago',
+          title: t('dashboard.aiTherapySession'), 
+          description: t('dashboard.discussedAnxiety'), 
+          time: t('dashboard.daysAgo', { count: 1 }),
           icon: faComments 
         },
         { 
           id: 3, 
           type: 'exercise', 
-          title: 'Breathing Exercise', 
-          description: 'Completed 10-minute deep breathing', 
-          time: '2 days ago',
+          title: t('dashboard.breathingExercise'), 
+          description: t('dashboard.completedBreathing'), 
+          time: t('dashboard.daysAgo', { count: 2 }),
           icon: faDumbbell 
         },
         { 
           id: 4, 
           type: 'journal', 
-          title: 'Journal Entry', 
-          description: 'Reflected on today\'s experiences', 
-          time: '3 days ago',
+          title: t('dashboard.journalEntry'), 
+          description: t('dashboard.reflectedToday'), 
+          time: t('dashboard.daysAgo', { count: 3 }),
           icon: faBook 
         }
       ];
@@ -109,32 +111,32 @@ export default function Dashboard({ user }) {
 
   const quickActions = [
     { 
-      title: 'Log Mood', 
+      title: t('dashboard.logMood'), 
       icon: faHeart, 
       link: '/mood-tracker', 
       color: '#e91e63',
-      description: 'Track how you\'re feeling'
+      description: t('dashboard.trackFeeling')
     },
     { 
-      title: 'Start Chat', 
+      title: t('dashboard.startChat'), 
       icon: faComments, 
       link: '/chat', 
       color: '#2196f3',
-      description: 'Talk to AI therapist'
+      description: t('dashboard.talkToAI')
     },
     { 
-      title: 'Do Exercise', 
+      title: t('dashboard.doExercise'), 
       icon: faDumbbell, 
       link: '/exercises', 
       color: '#4caf50',
-      description: 'Practice mindfulness'
+      description: t('dashboard.practiceMindfulness')
     },
     { 
-      title: 'Write Journal', 
+      title: t('dashboard.writeJournal'), 
       icon: faBook, 
       link: '/journal', 
       color: '#ff9800',
-      description: 'Reflect on your day'
+      description: t('dashboard.reflectDay')
     }
   ];
 
@@ -143,8 +145,8 @@ export default function Dashboard({ user }) {
       <div className="dashboard">
         <div className="container">
           <div className="auth-required">
-            <h2>Please log in to view your dashboard</h2>
-            <Link to="/login" className="btn btn-primary">Login</Link>
+            <h2>{t('dashboard.pleaseLogin')}</h2>
+            <Link to="/login" className="btn btn-primary">{t('nav.login')}</Link>
           </div>
         </div>
       </div>
@@ -163,14 +165,14 @@ export default function Dashboard({ user }) {
         >
           <div className="welcome-section">
             <div className="welcome-text">
-              <h1>Welcome back, {user.name}! 👋</h1>
+              <h1>{t('dashboard.welcomeBack', { name: user.name })} 👋</h1>
               <p className="date">{getTodayDate()}</p>
-              <p className="streak">🔥 {streakCount} day streak of self-care!</p>
+              <p className="streak">🔥 {t('dashboard.dayStreak', { count: streakCount })}</p>
             </div>
             <div className="today-mood">
               {todayMood ? (
                 <div className="mood-display">
-                  <span className="mood-label">Today's Mood</span>
+                  <span className="mood-label">{t('dashboard.todaysMood')}</span>
                   <div className="mood-value">
                     <FontAwesomeIcon 
                       icon={getMoodIcon(todayMood).icon} 
@@ -182,7 +184,7 @@ export default function Dashboard({ user }) {
               ) : (
                 <Link to="/mood-tracker" className="mood-prompt">
                   <FontAwesomeIcon icon={faHeart} />
-                  <span>Log Today's Mood</span>
+                  <span>{t('dashboard.logTodaysMood')}</span>
                 </Link>
               )}
             </div>
@@ -196,7 +198,7 @@ export default function Dashboard({ user }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1 }}
         >
-          <h2>Quick Actions</h2>
+          <h2>{t('dashboard.quickActions')}</h2>
           <div className="actions-grid">
             {quickActions.map((action, index) => (
               <motion.div
@@ -227,15 +229,15 @@ export default function Dashboard({ user }) {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <div className="section-header">
-              <h2>This Week's Goals</h2>
-              <Link to="/profile" className="view-all">View All</Link>
+              <h2>{t('dashboard.thisWeeksGoals')}</h2>
+              <Link to="/profile" className="view-all">{t('dashboard.viewAll')}</Link>
             </div>
             <div className="goals-list">
               {weeklyGoals.map(goal => (
                 <div key={goal.id} className="goal-item">
                   <div className="goal-info">
                     <h4>{goal.title}</h4>
-                    <p>{goal.completed}/{goal.target} completed</p>
+                    <p>{t('dashboard.goalCompleted', { completed: goal.completed, target: goal.target })}</p>
                   </div>
                   <div className="goal-progress">
                     <div className="progress-bar">
@@ -262,8 +264,8 @@ export default function Dashboard({ user }) {
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="section-header">
-              <h2>Weekly Mood Trends</h2>
-              <Link to="/mood-tracker" className="view-all">View Details</Link>
+              <h2>{t('dashboard.weeklyMoodTrends')}</h2>
+              <Link to="/mood-tracker" className="view-all">{t('dashboard.viewDetails')}</Link>
             </div>
             <div className="chart-container">
               <ResponsiveContainer width="100%" height={300}>
@@ -300,8 +302,8 @@ export default function Dashboard({ user }) {
           transition={{ duration: 0.6, delay: 0.4 }}
         >
           <div className="section-header">
-            <h2>Recent Activity</h2>
-            <Link to="/profile" className="view-all">View All</Link>
+            <h2>{t('dashboard.recentActivity')}</h2>
+            <Link to="/profile" className="view-all">{t('dashboard.viewAll')}</Link>
           </div>
           <div className="activity-list">
             {recentActivity.map(activity => (
@@ -326,22 +328,22 @@ export default function Dashboard({ user }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.5 }}
         >
-          <h2>Your Insights</h2>
+          <h2>{t('dashboard.yourInsights')}</h2>
           <div className="insights-grid">
             <div className="insight-card positive">
               <FontAwesomeIcon icon={faArrowTrendUp} />
-              <h3>Mood Improving</h3>
-              <p>Your mood has increased by 20% this week compared to last week.</p>
+              <h3>{t('dashboard.moodImproving')}</h3>
+              <p>{t('dashboard.moodIncreased')}</p>
             </div>
             <div className="insight-card neutral">
               <FontAwesomeIcon icon={faChartLine} />
-              <h3>Consistent Check-ins</h3>
-              <p>Great job logging your mood daily! Consistency helps track patterns.</p>
+              <h3>{t('dashboard.consistentCheckins')}</h3>
+              <p>{t('dashboard.greatJobLogging')}</p>
             </div>
             <div className="insight-card suggestion">
               <FontAwesomeIcon icon={faExclamationTriangle} />
-              <h3>Recommendation</h3>
-              <p>Consider adding more meditation sessions to help with stress management.</p>
+              <h3>{t('dashboard.recommendation')}</h3>
+              <p>{t('dashboard.considerMeditation')}</p>
             </div>
           </div>
         </motion.section>

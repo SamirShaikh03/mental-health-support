@@ -14,9 +14,11 @@ import {
 import Calendar from 'react-calendar';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import 'react-calendar/dist/Calendar.css';
 
 export default function MoodTracker({ user }) {
+  const { t } = useTranslation();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [currentMood, setCurrentMood] = useState({
     overall: 5,
@@ -34,18 +36,27 @@ export default function MoodTracker({ user }) {
   const [savedToday, setSavedToday] = useState(false);
 
   const moodCategories = [
-    { key: 'overall', label: 'Overall Mood', icon: faHeart, color: '#e91e63' },
-    { key: 'anxiety', label: 'Anxiety Level', icon: faFrown, color: '#f44336' },
-    { key: 'energy', label: 'Energy Level', icon: faSmile, color: '#4caf50' },
-    { key: 'sleep', label: 'Sleep Quality', icon: faMeh, color: '#2196f3' },
-    { key: 'stress', label: 'Stress Level', icon: faFrown, color: '#ff9800' },
-    { key: 'social', label: 'Social Connection', icon: faSmile, color: '#9c27b0' }
+    { key: 'overall', label: t('moodTracker.categories.overallMood'), icon: faHeart, color: '#e91e63' },
+    { key: 'anxiety', label: t('moodTracker.categories.anxietyLevel'), icon: faFrown, color: '#f44336' },
+    { key: 'energy', label: t('moodTracker.categories.energyLevel'), icon: faSmile, color: '#4caf50' },
+    { key: 'sleep', label: t('moodTracker.categories.sleepQuality'), icon: faMeh, color: '#2196f3' },
+    { key: 'stress', label: t('moodTracker.categories.stressLevel'), icon: faFrown, color: '#ff9800' },
+    { key: 'social', label: t('moodTracker.categories.socialConnection'), icon: faSmile, color: '#9c27b0' }
   ];
 
   const commonTriggers = [
-    'Work stress', 'Family issues', 'Health concerns', 'Financial worry', 
-    'Relationship problems', 'Sleep deprivation', 'Weather', 'Social media',
-    'Exercise', 'Good news', 'Achievement', 'Social interaction'
+    t('moodTracker.triggers.items.work'),
+    t('moodTracker.triggers.items.family'),
+    t('moodTracker.triggers.items.health'),
+    t('moodTracker.triggers.items.finances'),
+    t('moodTracker.triggers.items.relationships'),
+    t('moodTracker.triggers.items.sleep'),
+    t('moodTracker.triggers.items.weather'),
+    t('moodTracker.triggers.items.social'),
+    t('moodTracker.triggers.items.exercise'),
+    t('moodTracker.triggers.items.diet'),
+    t('moodTracker.triggers.items.news'),
+    t('moodTracker.triggers.items.other')
   ];
 
   useEffect(() => {
@@ -125,7 +136,7 @@ export default function MoodTracker({ user }) {
     setSavedToday(true);
     
     // Show success message
-    alert('Mood entry saved successfully!');
+    alert(t('moodTracker.success'));
   };
 
   const getMoodColor = (value) => {
@@ -158,7 +169,7 @@ export default function MoodTracker({ user }) {
       <div className="mood-tracker">
         <div className="container">
           <div className="auth-required">
-            <h2>Please log in to track your mood</h2>
+            <h2>{t('moodTracker.loginRequired')}</h2>
           </div>
         </div>
       </div>
@@ -176,9 +187,9 @@ export default function MoodTracker({ user }) {
         >
           <h1>
             <FontAwesomeIcon icon={faHeart} />
-            Mood Tracker
+            {t('moodTracker.pageTitle')}
           </h1>
-          <p>Track your emotional well-being and discover patterns in your mental health</p>
+          <p>{t('moodTracker.pageDescription')}</p>
         </motion.div>
 
         <div className="mood-tracker-content">
@@ -190,7 +201,7 @@ export default function MoodTracker({ user }) {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             <div className="section-header">
-              <h2>How are you feeling?</h2>
+              <h2>{t('moodTracker.howFeeling')}</h2>
               <div className="date-selector">
                 <FontAwesomeIcon icon={faCalendar} />
                 <span>{selectedDate.toLocaleDateString('en-US', { 
@@ -229,9 +240,9 @@ export default function MoodTracker({ user }) {
                       }}
                     />
                     <div className="slider-labels">
-                      <span>Low</span>
-                      <span>Medium</span>
-                      <span>High</span>
+                      <span>{t('moodTracker.levels.low')}</span>
+                      <span>{t('moodTracker.levels.medium')}</span>
+                      <span>{t('moodTracker.levels.high')}</span>
                     </div>
                   </div>
                 </div>
@@ -240,7 +251,7 @@ export default function MoodTracker({ user }) {
 
             {/* Mood Radar Chart */}
             <div className="mood-radar">
-              <h3>Today's Mood Overview</h3>
+              <h3>{t('moodTracker.todaysOverview')}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <RadarChart data={getRadarData()}>
                   <PolarGrid />
@@ -259,10 +270,10 @@ export default function MoodTracker({ user }) {
 
             {/* Triggers */}
             <div className="triggers-section">
-              <h3>What influenced your mood today?</h3>
+              <h3>{t('moodTracker.triggers.title')}</h3>
               
               <div className="common-triggers">
-                <h4>Common Triggers:</h4>
+                <h4>{t('moodTracker.triggers.common')}</h4>
                 <div className="trigger-buttons">
                   {commonTriggers.map(trigger => (
                     <button
@@ -286,7 +297,7 @@ export default function MoodTracker({ user }) {
                     type="text"
                     value={newTrigger}
                     onChange={(e) => setNewTrigger(e.target.value)}
-                    placeholder="Add custom trigger..."
+                    placeholder={t('moodTracker.triggers.addCustom')}
                     onKeyPress={(e) => e.key === 'Enter' && addTrigger(newTrigger)}
                   />
                   <button onClick={() => addTrigger(newTrigger)}>
@@ -297,7 +308,7 @@ export default function MoodTracker({ user }) {
 
               {triggers.length > 0 && (
                 <div className="selected-triggers">
-                  <h4>Selected Triggers:</h4>
+                  <h4>{t('moodTracker.triggers.selected')}</h4>
                   <div className="trigger-tags">
                     {triggers.map(trigger => (
                       <span key={trigger} className="trigger-tag">
@@ -314,11 +325,11 @@ export default function MoodTracker({ user }) {
 
             {/* Notes */}
             <div className="mood-notes">
-              <h3>Additional Notes</h3>
+              <h3>{t('moodTracker.notes.title')}</h3>
               <textarea
                 value={moodNote}
                 onChange={(e) => setMoodNote(e.target.value)}
-                placeholder="How was your day? Any thoughts or feelings you'd like to record?"
+                placeholder={t('moodTracker.notes.placeholder')}
                 rows={4}
               />
             </div>
@@ -328,7 +339,7 @@ export default function MoodTracker({ user }) {
               onClick={saveMoodEntry}
             >
               <FontAwesomeIcon icon={faSave} />
-              {savedToday ? 'Update Entry' : 'Save Entry'}
+              {savedToday ? t('moodTracker.buttons.update') : t('moodTracker.buttons.save')}
             </button>
           </motion.section>
 
@@ -342,19 +353,19 @@ export default function MoodTracker({ user }) {
             <div className="section-header">
               <h2>
                 <FontAwesomeIcon icon={faChartLine} />
-                Mood Analytics
+                {t('moodTracker.analytics.title')}
               </h2>
               <button 
                 className="btn btn-outline"
                 onClick={() => setShowMoodLog(!showMoodLog)}
               >
-                {showMoodLog ? 'Hide' : 'Show'} Mood Log
+                {showMoodLog ? t('moodTracker.analytics.hide') : t('moodTracker.analytics.show')} {t('moodTracker.analytics.moodLog')}
               </button>
             </div>
 
             {/* Trend Chart */}
             <div className="chart-container">
-              <h3>14-Day Mood Trends</h3>
+              <h3>{t('moodTracker.analytics.trends')}</h3>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={getChartData()}>
                   <CartesianGrid strokeDasharray="3 3" />
@@ -366,21 +377,21 @@ export default function MoodTracker({ user }) {
                     dataKey="overall" 
                     stroke="#e91e63" 
                     strokeWidth={3}
-                    name="Overall Mood"
+                    name={t('moodTracker.analytics.overallMood')}
                   />
                   <Line 
                     type="monotone" 
                     dataKey="energy" 
                     stroke="#4caf50" 
                     strokeWidth={2}
-                    name="Energy"
+                    name={t('moodTracker.analytics.energy')}
                   />
                   <Line 
                     type="monotone" 
                     dataKey="anxiety" 
                     stroke="#f44336" 
                     strokeWidth={2}
-                    name="Low Anxiety"
+                    name={t('moodTracker.analytics.lowAnxiety')}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -388,7 +399,7 @@ export default function MoodTracker({ user }) {
 
             {/* Calendar View */}
             <div className="mood-calendar">
-              <h3>Mood Calendar</h3>
+              <h3>{t('moodTracker.analytics.calendar')}</h3>
               <Calendar
                 onChange={setSelectedDate}
                 value={selectedDate}
@@ -421,7 +432,7 @@ export default function MoodTracker({ user }) {
             {/* Mood Log */}
             {showMoodLog && (
               <div className="mood-log">
-                <h3>Recent Entries</h3>
+                <h3>{t('moodTracker.analytics.recentEntries')}</h3>
                 <div className="log-entries">
                   {moodHistory.slice(-10).reverse().map((entry, index) => (
                     <div key={index} className="log-entry">

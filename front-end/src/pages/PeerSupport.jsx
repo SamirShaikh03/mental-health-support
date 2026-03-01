@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faUsers, 
@@ -38,7 +39,8 @@ const ForumPostCard = ({
   onView, 
   categories, 
   getTimeAgo, 
-  isPinned 
+  isPinned,
+  t 
 }) => {
   const categoryInfo = categories.find(c => c.id === post.category);
   const shouldTruncate = post.content.length > 200;
@@ -58,7 +60,7 @@ const ForumPostCard = ({
       {isPinned && (
         <div className="pinned-indicator">
           <FontAwesomeIcon icon={faStar} />
-          <span>Pinned</span>
+          <span>{t('peerSupport.post.pinned')}</span>
         </div>
       )}
 
@@ -87,7 +89,7 @@ const ForumPostCard = ({
             </span>
             <span className="post-views">
               <FontAwesomeIcon icon={faEye} />
-              {post.views || 0} views
+              {post.views || 0} {t('peerSupport.post.views')}
             </span>
           </div>
         </div>
@@ -119,12 +121,12 @@ const ForumPostCard = ({
             {isExpanded ? (
               <>
                 <FontAwesomeIcon icon={faChevronUp} />
-                Show less
+                {t('peerSupport.post.showLess')}
               </>
             ) : (
               <>
                 <FontAwesomeIcon icon={faChevronDown} />
-                Read more
+                {t('peerSupport.post.readMore')}
               </>
             )}
           </button>
@@ -159,12 +161,12 @@ const ForumPostCard = ({
             onClick={(e) => e.stopPropagation()}
           >
             <FontAwesomeIcon icon={faReply} />
-            <span>{post.replies} replies</span>
+            <span>{post.replies} {t('peerSupport.post.replies')}</span>
           </button>
 
           <div className="engagement-pill">
             <FontAwesomeIcon icon={faEye} />
-            <span>{post.views || 0} views</span>
+            <span>{post.views || 0} {t('peerSupport.post.views')}</span>
           </div>
         </div>
 
@@ -174,7 +176,7 @@ const ForumPostCard = ({
             onClick={(e) => e.stopPropagation()}
           >
             <FontAwesomeIcon icon={faShare} />
-            Share
+            {t('peerSupport.post.share')}
           </button>
 
           <button 
@@ -182,13 +184,13 @@ const ForumPostCard = ({
             onClick={(e) => e.stopPropagation()}
           >
             <FontAwesomeIcon icon={faBookmark} />
-            Save
+            {t('peerSupport.post.save')}
           </button>
         </div>
 
         {isExpanded && post.replies_data && post.replies_data.length > 0 && (
           <div className="replies-section">
-            <h4>Replies ({post.replies})</h4>
+            <h4>{t('peerSupport.post.repliesSection')} ({post.replies})</h4>
             {post.replies_data.map(reply => (
               <div key={reply.id} className="reply-item">
                 <div className="reply-header">
@@ -197,7 +199,7 @@ const ForumPostCard = ({
                     {reply.is_volunteer && (
                       <span className="volunteer-badge">
                         <FontAwesomeIcon icon={faShieldAlt} />
-                        Student Volunteer
+                        {t('peerSupport.post.studentVolunteer')}
                       </span>
                     )}
                     {reply.author}
@@ -238,6 +240,7 @@ const ForumPostCard = ({
  */
 
 export default function PeerSupport({ user }) {
+  const { t } = useTranslation();
   // State management for forum data
   const [posts, setPosts] = useState([]);
   const [newPost, setNewPost] = useState({ title: '', content: '', category: 'general' });
@@ -372,7 +375,7 @@ export default function PeerSupport({ user }) {
     e.preventDefault();
     
     if (!user) {
-      alert('Please log in to post');
+      alert(t('common.login'));
       return;
     }
 
@@ -404,7 +407,7 @@ export default function PeerSupport({ user }) {
   // Function to handle liking a post
   const handleLike = (postId) => {
     if (!user) {
-      alert('Please log in to like posts');
+      alert(t('common.login'));
       return;
     }
 
@@ -444,7 +447,7 @@ export default function PeerSupport({ user }) {
   // Function to report inappropriate content
   const handleReport = (postId) => {
     if (!user) {
-      alert('Please log in to report posts');
+      alert(t('common.login'));
       return;
     }
     
@@ -504,23 +507,23 @@ export default function PeerSupport({ user }) {
               className="auth-content"
             >
               <FontAwesomeIcon icon={faUsers} size="4x" style={{ color: '#6366f1' }} />
-              <h2>Join Our Peer Support Community</h2>
-              <p>Connect with fellow students in a safe, moderated environment</p>
+              <h2>{t('peerSupport.authRequired.title')}</h2>
+              <p>{t('peerSupport.authRequired.description')}</p>
               <div className="features-list">
                 <div className="feature">
                   <FontAwesomeIcon icon={faShieldAlt} />
-                  <span>Moderated by student volunteers</span>
+                  <span>{t('peerSupport.authRequired.feature1')}</span>
                 </div>
                 <div className="feature">
                   <FontAwesomeIcon icon={faUserCircle} />
-                  <span>Anonymous discussions</span>
+                  <span>{t('peerSupport.authRequired.feature2')}</span>
                 </div>
                 <div className="feature">
                   <FontAwesomeIcon icon={faHeart} />
-                  <span>Supportive community</span>
+                  <span>{t('peerSupport.authRequired.feature3')}</span>
                 </div>
               </div>
-              <p className="login-prompt">Please log in to participate in discussions and get support from your peers</p>
+              <p className="login-prompt">{t('peerSupport.authRequired.loginPrompt')}</p>
             </motion.div>
           </div>
         </div>
@@ -542,21 +545,21 @@ export default function PeerSupport({ user }) {
             <div className="header-left">
               <h1>
                 <FontAwesomeIcon icon={faUsers} className="header-icon" />
-                Peer Support Forum
+                {t('peerSupport.pageTitle')}
               </h1>
-              <p>Connect with fellow students in a safe, moderated community</p>
+              <p>{t('peerSupport.pageDescription')}</p>
               <div className="community-stats">
                 <div className="stat">
                   <FontAwesomeIcon icon={faComments} />
-                  <span>{posts.length} Active Discussions</span>
+                  <span>{posts.length} {t('peerSupport.activeDiscussions')}</span>
                 </div>
                 <div className="stat">
                   <FontAwesomeIcon icon={faUserFriends} />
-                  <span>200+ Community Members</span>
+                  <span>{t('peerSupport.communityMembers')}</span>
                 </div>
                 <div className="stat">
                   <FontAwesomeIcon icon={faShieldAlt} />
-                  <span>Student Volunteer Moderated</span>
+                  <span>{t('peerSupport.moderatedBy')}</span>
                 </div>
               </div>
             </div>
@@ -568,7 +571,7 @@ export default function PeerSupport({ user }) {
               whileTap={{ scale: 0.95 }}
             >
               <FontAwesomeIcon icon={faPlus} />
-              New Discussion
+              {t('peerSupport.newDiscussion')}
             </motion.button>
           </div>
         </motion.div>
@@ -582,24 +585,24 @@ export default function PeerSupport({ user }) {
         >
           <div className="guidelines-header">
             <FontAwesomeIcon icon={faShieldAlt} />
-            <h3>Community Guidelines</h3>
+            <h3>{t('peerSupport.guidelines.title')}</h3>
           </div>
           <div className="guidelines-grid">
             <div className="guideline-item">
               <FontAwesomeIcon icon={faHeart} />
-              <span>Be respectful and supportive</span>
+              <span>{t('peerSupport.guidelines.respectful')}</span>
             </div>
             <div className="guideline-item">
               <FontAwesomeIcon icon={faUserCircle} />
-              <span>Anonymous & confidential</span>
+              <span>{t('peerSupport.guidelines.anonymous')}</span>
             </div>
             <div className="guideline-item">
               <FontAwesomeIcon icon={faCheckCircle} />
-              <span>Moderated by volunteers</span>
+              <span>{t('peerSupport.guidelines.moderated')}</span>
             </div>
             <div className="guideline-item">
               <FontAwesomeIcon icon={faFlag} />
-              <span>Report inappropriate content</span>
+              <span>{t('peerSupport.guidelines.report')}</span>
             </div>
           </div>
         </motion.div>
@@ -616,21 +619,21 @@ export default function PeerSupport({ user }) {
             onClick={() => setActiveTab('discussions')}
           >
             <FontAwesomeIcon icon={faComments} />
-            Discussions
+            {t('peerSupport.tabs.discussions')}
           </button>
           <button 
             className={`tab-btn ${activeTab === 'trending' ? 'active' : ''}`}
             onClick={() => setActiveTab('trending')}
           >
             <FontAwesomeIcon icon={faThumbsUp} />
-            Trending
+            {t('peerSupport.tabs.trending')}
           </button>
           <button 
             className={`tab-btn ${activeTab === 'resources' ? 'active' : ''}`}
             onClick={() => setActiveTab('resources')}
           >
             <FontAwesomeIcon icon={faBookmark} />
-            Resources
+            {t('peerSupport.tabs.resources')}
           </button>
         </motion.div>
 
@@ -644,18 +647,18 @@ export default function PeerSupport({ user }) {
           >
             <div className="controls-header">
               <div className="controls-header-text">
-                <p className="controls-eyebrow">Smart filters</p>
-                <h3>Navigate community conversations with precision</h3>
-                <p>Use the search and category chips to jump into topics that matter right now.</p>
+                <p className="controls-eyebrow">{t('peerSupport.filters.smart')}</p>
+                <h3>{t('peerSupport.filters.description')}</h3>
+                <p>{t('peerSupport.filters.help')}</p>
               </div>
               <div className="controls-metrics">
                 <span className="metric-pill">
                   <FontAwesomeIcon icon={faFilter} />
-                  Dynamic filters
+                  {t('peerSupport.filters.dynamic')}
                 </span>
                 <span className="metric-pill active">
                   <FontAwesomeIcon icon={faComments} />
-                  {filteredPosts.length} matches
+                  {filteredPosts.length} {t('peerSupport.filters.matches')}
                 </span>
               </div>
             </div>
@@ -668,7 +671,7 @@ export default function PeerSupport({ user }) {
                   <input
                     id="forum-search"
                     type="text"
-                    placeholder="Search discussions, topics, or tags..."
+                    placeholder={t('peerSupport.filters.searchPlaceholder')}
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                   />
@@ -676,7 +679,7 @@ export default function PeerSupport({ user }) {
               </div>
               
               <div className="sort-panel">
-                <label htmlFor="sort-select">Sort order</label>
+                <label htmlFor="sort-select">{t('peerSupport.filters.sortOrder')}</label>
                 <div className="sort-select-wrapper">
                   <select 
                     id="sort-select"
@@ -684,9 +687,9 @@ export default function PeerSupport({ user }) {
                     onChange={(e) => setSortBy(e.target.value)}
                     className="sort-select"
                   >
-                    <option value="recent">Most Recent</option>
-                    <option value="popular">Most Popular</option>
-                    <option value="replies">Most Replies</option>
+                    <option value="recent">{t('peerSupport.filters.mostRecent')}</option>
+                    <option value="popular">{t('peerSupport.filters.mostPopular')}</option>
+                    <option value="replies">{t('peerSupport.filters.mostReplies')}</option>
                   </select>
                   <FontAwesomeIcon icon={faChevronDown} />
                 </div>
@@ -728,14 +731,14 @@ export default function PeerSupport({ user }) {
                   <div>
                     <span className="pinned-eyebrow">
                       <FontAwesomeIcon icon={faStar} />
-                      Featured by moderators
+                      {t('peerSupport.sections.featuredBy')}
                     </span>
-                    <h3>Pinned discussions</h3>
-                    <p>Important conversations surfaced for quick attention.</p>
+                    <h3>{t('peerSupport.sections.pinnedDiscussions')}</h3>
+                    <p>{t('peerSupport.sections.pinnedDesc')}</p>
                   </div>
                   <span className="pinned-count">
                     <FontAwesomeIcon icon={faBell} />
-                    {pinnedPosts.length} live topics
+                    {pinnedPosts.length} {t('peerSupport.sections.liveTopics')}
                   </span>
                 </div>
                 <div className="pinned-grid">
@@ -752,6 +755,7 @@ export default function PeerSupport({ user }) {
                       categories={categories}
                       getTimeAgo={getTimeAgo}
                       isPinned={true}
+                      t={t}
                     />
                   ))}
                 </div>
@@ -765,9 +769,9 @@ export default function PeerSupport({ user }) {
                   <div className="regular-header">
                     <h3>
                       <FontAwesomeIcon icon={faComments} />
-                      Recent discussions
+                      {t('peerSupport.sections.recentDiscussions')}
                     </h3>
-                    <p>Fresh conversations from across the community.</p>
+                    <p>{t('peerSupport.sections.recentDesc')}</p>
                   </div>
                 )}
                 {regularPosts.map((post, index) => (
@@ -783,20 +787,21 @@ export default function PeerSupport({ user }) {
                     categories={categories}
                     getTimeAgo={getTimeAgo}
                     isPinned={false}
+                    t={t}
                   />
                 ))}
               </div>
             ) : (
               <div className="no-posts">
                 <FontAwesomeIcon icon={faComments} size="3x" />
-                <h3>No discussions found</h3>
-                <p>Be the first to start a conversation in this category!</p>
+                <h3>{t('peerSupport.emptyState.title')}</h3>
+                <p>{t('peerSupport.emptyState.description')}</p>
                 <button 
                   className="btn btn-primary"
                   onClick={() => setShowNewPostForm(true)}
                 >
                   <FontAwesomeIcon icon={faPlus} />
-                  Start a Discussion
+                  {t('peerSupport.emptyState.button')}
                 </button>
               </div>
             )}
@@ -823,7 +828,7 @@ export default function PeerSupport({ user }) {
                 <div className="modal-header">
                   <h2>
                     <FontAwesomeIcon icon={faPlus} />
-                    Start a New Discussion
+                    {t('peerSupport.modal.title')}
                   </h2>
                   <button 
                     className="close-modal"
@@ -838,7 +843,7 @@ export default function PeerSupport({ user }) {
                     <div className="form-group">
                       <label htmlFor="category">
                         <FontAwesomeIcon icon={faComments} />
-                        Category
+                        {t('peerSupport.modal.category')}
                       </label>
                       <select
                         id="category"
@@ -858,46 +863,46 @@ export default function PeerSupport({ user }) {
                   <div className="form-group">
                     <label htmlFor="title">
                       <FontAwesomeIcon icon={faEdit} />
-                      Discussion Title
+                      {t('peerSupport.modal.discussionTitle')}
                     </label>
                     <input
                       type="text"
                       id="title"
                       value={newPost.title}
                       onChange={(e) => setNewPost({...newPost, title: e.target.value})}
-                      placeholder="Write a clear, descriptive title for your discussion..."
+                      placeholder={t('peerSupport.modal.titlePlaceholder')}
                       required
                       maxLength={100}
                     />
-                    <small className="char-count">{newPost.title.length}/100 characters</small>
+                    <small className="char-count">{newPost.title.length}/100 {t('peerSupport.modal.characters')}</small>
                   </div>
 
                   <div className="form-group">
                     <label htmlFor="content">
                       <FontAwesomeIcon icon={faComments} />
-                      Your Message
+                      {t('peerSupport.modal.yourMessage')}
                     </label>
                     <textarea
                       id="content"
                       value={newPost.content}
                       onChange={(e) => setNewPost({...newPost, content: e.target.value})}
-                      placeholder="Share your thoughts, experiences, or questions. Remember to be respectful and supportive. Our community is here to help each other."
+                      placeholder={t('peerSupport.modal.messagePlaceholder')}
                       required
                       rows={8}
                       maxLength={1000}
                     />
-                    <small className="char-count">{newPost.content.length}/1000 characters</small>
+                    <small className="char-count">{newPost.content.length}/1000 {t('peerSupport.modal.characters')}</small>
                   </div>
 
                   <div className="privacy-notice">
                     <div className="notice-header">
                       <FontAwesomeIcon icon={faShieldAlt} />
-                      <h4>Privacy & Moderation</h4>
+                      <h4>{t('peerSupport.modal.privacyTitle')}</h4>
                     </div>
                     <ul>
-                      <li>Your post will be published anonymously to protect your privacy</li>
-                      <li>All posts are reviewed by trained student volunteer moderators</li>
-                      <li>Posts typically appear within 30 minutes after review</li>
+                      <li>{t('peerSupport.modal.privacyItems.anonymous')}</li>
+                      <li>{t('peerSupport.modal.privacyItems.moderated')}</li>
+                      <li>{t('peerSupport.modal.privacyItems.confidential')}</li>
                       <li>For immediate crisis support, please contact emergency services</li>
                     </ul>
                   </div>
@@ -909,7 +914,7 @@ export default function PeerSupport({ user }) {
                       onClick={() => setShowNewPostForm(false)}
                     >
                       <FontAwesomeIcon icon={faTimes} />
-                      Cancel
+                      {t('peerSupport.modal.cancel')}
                     </button>
                     <button 
                       type="submit" 
@@ -917,7 +922,7 @@ export default function PeerSupport({ user }) {
                       disabled={!newPost.title.trim() || !newPost.content.trim()}
                     >
                       <FontAwesomeIcon icon={faPlus} />
-                      Submit for Review
+                      {t('peerSupport.modal.submit')}
                     </button>
                   </div>
                 </form>

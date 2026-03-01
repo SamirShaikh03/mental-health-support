@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faDumbbell, 
@@ -18,6 +19,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Exercises({ user }) {
+  const { t } = useTranslation();
   const [activeExercise, setActiveExercise] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [timer, setTimer] = useState(0);
@@ -27,11 +29,11 @@ export default function Exercises({ user }) {
   const [selectedCategory, setSelectedCategory] = useState('all');
 
   const exerciseCategories = [
-    { id: 'all', label: 'All Exercises', icon: faDumbbell },
-    { id: 'breathing', label: 'Breathing', icon: faLungs },
-    { id: 'meditation', label: 'Meditation', icon: faBrain },
-    { id: 'relaxation', label: 'Relaxation', icon: faLeaf },
-    { id: 'mindfulness', label: 'Mindfulness', icon: faHeart }
+    { id: 'all', label: t('exercises.categories.all'), icon: faDumbbell },
+    { id: 'breathing', label: t('exercises.categories.breathing'), icon: faLungs },
+    { id: 'meditation', label: t('exercises.categories.meditation'), icon: faBrain },
+    { id: 'relaxation', label: t('exercises.categories.relaxation'), icon: faLeaf },
+    { id: 'mindfulness', label: t('exercises.categories.mindfulness'), icon: faHeart }
   ];
 
   const exercises = [
@@ -286,8 +288,8 @@ export default function Exercises({ user }) {
         <div className="container">
           <div className="auth-required">
             <FontAwesomeIcon icon={faDumbbell} size="3x" />
-            <h2>Please log in to access mental health exercises</h2>
-            <p>Guided meditation, breathing exercises, and relaxation techniques</p>
+            <h2>{t('exercises.loginRequired')}</h2>
+            <p>{t('exercises.loginDescription')}</p>
           </div>
         </div>
       </div>
@@ -305,9 +307,9 @@ export default function Exercises({ user }) {
         >
           <h1>
             <FontAwesomeIcon icon={faDumbbell} />
-            Mental Health Exercises
+            {t('exercises.pageTitle')}
           </h1>
-          <p>Evidence-based techniques for relaxation, mindfulness, and stress reduction</p>
+          <p>{t('exercises.pageDescription')}</p>
         </motion.div>
 
         {/* Active Exercise Player */}
@@ -325,7 +327,7 @@ export default function Exercises({ user }) {
                 <button 
                   className="sound-toggle"
                   onClick={() => setSoundEnabled(!soundEnabled)}
-                  title={soundEnabled ? 'Disable sound' : 'Enable sound'}
+                  title={soundEnabled ? t('exercises.controls.disableSound') : t('exercises.controls.enableSound')}
                 >
                   <FontAwesomeIcon icon={soundEnabled ? faVolumeUp : faVolumeOff} />
                 </button>
@@ -365,23 +367,23 @@ export default function Exercises({ user }) {
                 {!isPlaying ? (
                   <button className="control-btn play" onClick={resumeExercise}>
                     <FontAwesomeIcon icon={faPlay} />
-                    <span>Resume</span>
+                    <span>{t('exercises.controls.resume')}</span>
                   </button>
                 ) : (
                   <button className="control-btn pause" onClick={pauseExercise}>
                     <FontAwesomeIcon icon={faPause} />
-                    <span>Pause</span>
+                    <span>{t('exercises.controls.pause')}</span>
                   </button>
                 )}
                 
                 <button className="control-btn restart" onClick={() => startExercise(activeExercise)}>
                   <FontAwesomeIcon icon={faRedo} />
-                  <span>Restart</span>
+                  <span>{t('exercises.controls.restart')}</span>
                 </button>
                 
                 <button className="control-btn stop" onClick={stopExercise}>
                   <FontAwesomeIcon icon={faStop} />
-                  <span>Stop</span>
+                  <span>{t('exercises.controls.stop')}</span>
                 </button>
               </div>
             </motion.div>
@@ -444,7 +446,7 @@ export default function Exercises({ user }) {
               <p className="exercise-description">{exercise.description}</p>
 
               <div className="exercise-benefits">
-                <h4>Benefits:</h4>
+                <h4>{t('exercises.benefits')}</h4>
                 <ul>
                   {exercise.benefits.map((benefit, i) => (
                     <li key={i}>
@@ -456,7 +458,7 @@ export default function Exercises({ user }) {
               </div>
 
               <div className="exercise-instructions">
-                <h4>Instructions:</h4>
+                <h4>{t('exercises.instructions')}</h4>
                 <ol>
                   {exercise.instructions.slice(0, 3).map((instruction, i) => (
                     <li key={i}>{instruction}</li>
@@ -471,7 +473,7 @@ export default function Exercises({ user }) {
                 disabled={activeExercise?.id === exercise.id && isPlaying}
               >
                 <FontAwesomeIcon icon={faPlay} />
-                {activeExercise?.id === exercise.id && isPlaying ? 'In Progress' : 'Start Exercise'}
+                {activeExercise?.id === exercise.id && isPlaying ? t('exercises.inProgress') : t('exercises.startExercise')}
               </button>
             </motion.div>
           ))}
@@ -485,14 +487,14 @@ export default function Exercises({ user }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
-            <h2>Recent Completions</h2>
+            <h2>{t('exercises.recentCompletions')}</h2>
             <div className="completed-list">
               {completedExercises.slice(0, 5).map((exercise, index) => (
                 <div key={index} className="completed-item">
                   <FontAwesomeIcon icon={faCheckCircle} className="completed-icon" />
                   <div className="completed-info">
                     <h4>{exercise.title}</h4>
-                    <p>Completed {exercise.completedAt.toLocaleDateString()}</p>
+                    <p>{t('exercises.completed')} {exercise.completedAt.toLocaleDateString()}</p>
                   </div>
                   <span className="completed-duration">
                     {formatTime(exercise.duration)}

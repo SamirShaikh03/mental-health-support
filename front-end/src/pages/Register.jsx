@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faUser, 
@@ -8,11 +9,14 @@ import {
   faEye, 
   faEyeSlash,
   faCalendar,
-  faMapMarkerAlt
+  faMapMarkerAlt,
+  faGlobe,
+  faShare
 } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 
 export default function Register({ onLogin }) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -48,32 +52,32 @@ export default function Register({ onLogin }) {
   const validateForm = () => {
     const newErrors = {};
 
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required';
+    if (!formData.firstName.trim()) newErrors.firstName = t('auth.errors.firstNameRequired');
+    if (!formData.lastName.trim()) newErrors.lastName = t('auth.errors.lastNameRequired');
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth.errors.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = t('auth.errors.emailInvalid');
     }
     
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('auth.errors.passwordRequired');
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = t('auth.errors.passwordLength');
     }
     
     if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = t('auth.errors.passwordMismatch');
     }
     
     if (!formData.age) {
-      newErrors.age = 'Age is required';
+      newErrors.age = t('auth.errors.ageRequired');
     } else if (formData.age < 13) {
-      newErrors.age = 'You must be at least 13 years old';
+      newErrors.age = t('auth.errors.ageMinimum');
     }
     
     if (!formData.agreedToTerms) {
-      newErrors.agreedToTerms = 'You must agree to the terms and conditions';
+      newErrors.agreedToTerms = t('auth.errors.termsRequired');
     }
 
     setErrors(newErrors);
@@ -107,10 +111,27 @@ export default function Register({ onLogin }) {
       onLogin(userData);
       navigate('/dashboard');
     } catch (error) {
-      setErrors({ submit: 'Registration failed. Please try again.' });
+      setErrors({ submit: t('auth.errors.registerFailed') });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSocialSignup = (provider) => {
+    // Simulate social signup
+    const userData = {
+      id: Date.now(),
+      name: `${provider} User`,
+      email: `user@${provider.toLowerCase()}.com`,
+      age: 25,
+      location: "New York, NY",
+      joinDate: new Date().toISOString(),
+      avatar: `https://ui-avatars.com/api/?name=${provider}+User&background=0077b6&color=fff`,
+      role: 'student'
+    };
+    
+    onLogin(userData);
+    navigate('/dashboard');
   };
 
   return (
@@ -123,14 +144,14 @@ export default function Register({ onLogin }) {
           transition={{ duration: 0.6 }}
         >
           <div className="auth-header">
-            <h1>Craft Your WellSetu Path</h1>
-            <p>Create an account to track your wellbeing rituals and connect with support.</p>
+            <h1>{t('auth.registerTitle')}</h1>
+            <p>{t('auth.registerDescription')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="firstName">First Name</label>
+                <label htmlFor="firstName">{t('auth.firstName')}</label>
                 <div className="input-group">
                   <FontAwesomeIcon icon={faUser} className="input-icon" />
                   <input
@@ -139,7 +160,7 @@ export default function Register({ onLogin }) {
                     name="firstName"
                     value={formData.firstName}
                     onChange={handleChange}
-                    placeholder="Enter your first name"
+                    placeholder={t('auth.placeholders.enterFirstName')}
                     className={errors.firstName ? 'error' : ''}
                   />
                 </div>
@@ -147,7 +168,7 @@ export default function Register({ onLogin }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="lastName">Last Name</label>
+                <label htmlFor="lastName">{t('auth.lastName')}</label>
                 <div className="input-group">
                   <FontAwesomeIcon icon={faUser} className="input-icon" />
                   <input
@@ -156,7 +177,7 @@ export default function Register({ onLogin }) {
                     name="lastName"
                     value={formData.lastName}
                     onChange={handleChange}
-                    placeholder="Enter your last name"
+                    placeholder={t('auth.placeholders.enterLastName')}
                     className={errors.lastName ? 'error' : ''}
                   />
                 </div>
@@ -165,7 +186,7 @@ export default function Register({ onLogin }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">{t('auth.email')}</label>
               <div className="input-group">
                 <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
                 <input
@@ -174,7 +195,7 @@ export default function Register({ onLogin }) {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.placeholders.enterEmail')}
                   className={errors.email ? 'error' : ''}
                 />
               </div>
@@ -183,7 +204,7 @@ export default function Register({ onLogin }) {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="password">Password</label>
+                <label htmlFor="password">{t('auth.password')}</label>
                 <div className="input-group">
                   <FontAwesomeIcon icon={faLock} className="input-icon" />
                   <input
@@ -192,7 +213,7 @@ export default function Register({ onLogin }) {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="Create a password"
+                    placeholder={t('auth.placeholders.createPassword')}
                     className={errors.password ? 'error' : ''}
                   />
                   <button
@@ -207,7 +228,7 @@ export default function Register({ onLogin }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="confirmPassword">Confirm Password</label>
+                <label htmlFor="confirmPassword">{t('auth.confirmPassword')}</label>
                 <div className="input-group">
                   <FontAwesomeIcon icon={faLock} className="input-icon" />
                   <input
@@ -216,7 +237,7 @@ export default function Register({ onLogin }) {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleChange}
-                    placeholder="Confirm your password"
+                    placeholder={t('auth.placeholders.confirmPassword')}
                     className={errors.confirmPassword ? 'error' : ''}
                   />
                   <button
@@ -233,7 +254,7 @@ export default function Register({ onLogin }) {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="age">Age</label>
+                <label htmlFor="age">{t('auth.age')}</label>
                 <div className="input-group">
                   <FontAwesomeIcon icon={faCalendar} className="input-icon" />
                   <input
@@ -242,7 +263,7 @@ export default function Register({ onLogin }) {
                     name="age"
                     value={formData.age}
                     onChange={handleChange}
-                    placeholder="Your age"
+                    placeholder={t('auth.placeholders.yourAge')}
                     min="13"
                     max="120"
                     className={errors.age ? 'error' : ''}
@@ -252,7 +273,7 @@ export default function Register({ onLogin }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="location">Location (Optional)</label>
+                <label htmlFor="location">{t('auth.location')}</label>
                 <div className="input-group">
                   <FontAwesomeIcon icon={faMapMarkerAlt} className="input-icon" />
                   <input
@@ -261,14 +282,14 @@ export default function Register({ onLogin }) {
                     name="location"
                     value={formData.location}
                     onChange={handleChange}
-                    placeholder="City, State"
+                    placeholder={t('auth.placeholders.cityState')}
                   />
                 </div>
               </div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="emergencyContact">Emergency Contact Name (Optional)</label>
+              <label htmlFor="emergencyContact">{t('auth.emergencyContactName')}</label>
               <div className="input-group">
                 <FontAwesomeIcon icon={faUser} className="input-icon" />
                 <input
@@ -277,13 +298,13 @@ export default function Register({ onLogin }) {
                   name="emergencyContact"
                   value={formData.emergencyContact}
                   onChange={handleChange}
-                  placeholder="Emergency contact name"
+                  placeholder={t('auth.placeholders.emergencyName')}
                 />
               </div>
             </div>
 
             <div className="form-group">
-              <label htmlFor="emergencyPhone">Emergency Contact Phone (Optional)</label>
+              <label htmlFor="emergencyPhone">{t('auth.emergencyContactPhone')}</label>
               <div className="input-group">
                 <FontAwesomeIcon icon={faUser} className="input-icon" />
                 <input
@@ -292,7 +313,7 @@ export default function Register({ onLogin }) {
                   name="emergencyPhone"
                   value={formData.emergencyPhone}
                   onChange={handleChange}
-                  placeholder="Emergency contact phone"
+                  placeholder={t('auth.placeholders.emergencyPhone')}
                 />
               </div>
             </div>
@@ -308,7 +329,7 @@ export default function Register({ onLogin }) {
                 />
                 <span className="checkmark"></span>
                 <span className="checkbox-text">
-                  I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>
+                  {t('auth.termsAgree')} <Link to="/terms">{t('auth.termsOfService')}</Link> {t('auth.and')} <Link to="/privacy">{t('auth.privacyPolicy')}</Link>
                 </span>
               </label>
               {errors.agreedToTerms && <span className="error-message">{errors.agreedToTerms}</span>}
@@ -324,38 +345,62 @@ export default function Register({ onLogin }) {
               {isLoading ? (
                 <>
                   <div className="loading-spinner small"></div>
-                  Creating Account...
+                  {t('auth.creatingAccount')}
                 </>
               ) : (
-                'Create Account'
+                t('auth.registerButton')
               )}
             </button>
           </form>
 
+          <div className="auth-divider">
+            <span>{t('auth.orSignUpWith')}</span>
+          </div>
+
+          <div className="social-auth">
+            <button 
+              type="button" 
+              className="btn btn-social btn-google"
+              onClick={() => handleSocialSignup('Google')}
+            >
+              <FontAwesomeIcon icon={faGlobe} />
+              <span>{t('auth.google')}</span>
+            </button>
+            <button 
+              type="button" 
+              className="btn btn-social btn-facebook"
+              onClick={() => handleSocialSignup('Facebook')}
+            >
+              <FontAwesomeIcon icon={faShare} />
+              <span>{t('auth.facebook')}</span>
+            </button>
+          </div>
+
           <div className="auth-footer">
-            <p>Already have an account? <Link to="/login">Sign in here</Link></p>
+            <p>{t('auth.alreadyHaveAccount')} <Link to="/login">{t('auth.signInHere')}</Link></p>
           </div>
         </motion.div>
 
         <div className="auth-side">
           <div className="auth-side-content">
-            <h2>Welcome to MindCare</h2>
+            <h2>{t('auth.joinToday')}</h2>
+            <p className="auth-side-subtitle">{t('auth.startJourney')}</p>
             <div className="benefits">
               <div className="benefit">
                 <span className="benefit-icon">🧠</span>
-                <span>AI-powered therapy sessions</span>
+                <span>{t('auth.benefits.aiSupport')}</span>
               </div>
               <div className="benefit">
                 <span className="benefit-icon">📊</span>
-                <span>Track your mental health progress</span>
+                <span>{t('auth.benefits.trackProgress')}</span>
               </div>
               <div className="benefit">
                 <span className="benefit-icon">🔒</span>
-                <span>100% private and secure</span>
+                <span>{t('auth.benefits.privateSecure')}</span>
               </div>
               <div className="benefit">
                 <span className="benefit-icon">🌟</span>
-                <span>Evidence-based tools and resources</span>
+                <span>{t('auth.benefits.evidenceBased')}</span>
               </div>
             </div>
           </div>

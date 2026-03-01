@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faEnvelope, 
@@ -14,28 +15,30 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 
-const roleOptions = [
+const getRoleOptions = (t) => [
   {
     value: 'student',
-    label: 'Student',
+    label: t('auth.roles.student'),
     icon: faUserGraduate,
-    blurb: 'Full access to personal wellness tools and trackers.'
+    blurb: t('auth.roles.studentDesc')
   },
   {
     value: 'counselor',
-    label: 'Peer Counselor',
+    label: t('auth.roles.counselor'),
     icon: faHandHoldingHeart,
-    blurb: 'Guide cohorts, review check-ins, and facilitate circles.'
+    blurb: t('auth.roles.counselorDesc')
   },
   {
     value: 'admin',
-    label: 'Admin',
+    label: t('auth.roles.admin'),
     icon: faShieldHalved,
-    blurb: 'Monitor analytics and manage institute-wide programs.'
+    blurb: t('auth.roles.adminDesc')
   }
 ];
 
 export default function Login({ onLogin }) {
+  const { t } = useTranslation();
+  const roleOptions = getRoleOptions(t);
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -65,13 +68,13 @@ export default function Login({ onLogin }) {
     const newErrors = {};
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth.errors.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = t('auth.errors.emailInvalid');
     }
     
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('auth.errors.passwordRequired');
     }
 
     setErrors(newErrors);
@@ -105,7 +108,7 @@ export default function Login({ onLogin }) {
       const destination = formData.role === 'admin' ? '/admin' : formData.role === 'counselor' ? '/counselor' : '/dashboard';
       navigate(destination);
     } catch (error) {
-      setErrors({ submit: 'Invalid email or password. Please try again.' });
+      setErrors({ submit: t('auth.errors.loginFailed') });
     } finally {
       setIsLoading(false);
     }
@@ -138,12 +141,12 @@ export default function Login({ onLogin }) {
           transition={{ duration: 0.6 }}
         >
           <div className="auth-header">
-            <h1>Step Back Into Balance</h1>
-            <p>Sign in to unlock your daily reflections, counselor notes, and support spaces.</p>
+            <h1>{t('auth.loginTitle')}</h1>
+            <p>{t('auth.loginDescription')}</p>
           </div>
 
           <div className="role-selector">
-            <p className="role-selector-label">Sign in as</p>
+            <p className="role-selector-label">{t('auth.signInAs')}</p>
             <div className="role-options">
               {roleOptions.map((option) => (
                 <label
@@ -173,7 +176,7 @@ export default function Login({ onLogin }) {
 
           <form onSubmit={handleSubmit} className="auth-form">
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email">{t('auth.email')}</label>
               <div className="input-group">
                 <FontAwesomeIcon icon={faEnvelope} className="input-icon" />
                 <input
@@ -182,7 +185,7 @@ export default function Login({ onLogin }) {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.placeholders.enterEmail')}
                   className={errors.email ? 'error' : ''}
                 />
               </div>
@@ -190,7 +193,7 @@ export default function Login({ onLogin }) {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">{t('auth.password')}</label>
               <div className="input-group">
                 <FontAwesomeIcon icon={faLock} className="input-icon" />
                 <input
@@ -199,7 +202,7 @@ export default function Login({ onLogin }) {
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your password"
+                  placeholder={t('auth.placeholders.enterPassword')}
                   className={errors.password ? 'error' : ''}
                 />
                 <button
@@ -222,10 +225,10 @@ export default function Login({ onLogin }) {
                   onChange={handleChange}
                 />
                 <span className="checkmark"></span>
-                <span className="checkbox-text">Remember me</span>
+                <span className="checkbox-text">{t('auth.rememberMe')}</span>
               </label>
               <Link to="/forgot-password" className="forgot-password">
-                Forgot password?
+                {t('auth.forgotPassword')}
               </Link>
             </div>
 
@@ -239,16 +242,16 @@ export default function Login({ onLogin }) {
               {isLoading ? (
                 <>
                   <div className="loading-spinner small"></div>
-                  Signing In...
+                  {t('auth.signingIn')}
                 </>
               ) : (
-                'Sign In'
+                t('auth.loginButton')
               )}
             </button>
           </form>
 
           <div className="auth-divider">
-            <span>or continue with</span>
+            <span>{t('auth.orContinueWith')}</span>
           </div>
 
           <div className="social-auth">
@@ -258,7 +261,7 @@ export default function Login({ onLogin }) {
               onClick={() => handleSocialLogin('Google')}
             >
                                 <FontAwesomeIcon icon={faGlobe} />
-              <span>Google</span>
+              <span>{t('auth.google')}</span>
             </button>
             <button 
               type="button" 
@@ -266,41 +269,42 @@ export default function Login({ onLogin }) {
               onClick={() => handleSocialLogin('Facebook')}
             >
                                 <FontAwesomeIcon icon={faShare} />
-              <span>Facebook</span>
+              <span>{t('auth.facebook')}</span>
             </button>
           </div>
 
           <div className="auth-footer">
-            <p>Don't have an account? <Link to="/register">Create one here</Link></p>
+            <p>{t('auth.dontHaveAccount')} <Link to="/register">{t('auth.createOneHere')}</Link></p>
           </div>
 
           <div className="demo-credentials">
-            <h4>Demo Credentials</h4>
-            <p>Email: demo@mindcare.com</p>
-            <p>Password: password123</p>
-            <p className="role-hint">Switch roles above to explore student, counselor, or admin flows.</p>
+            <h4>{t('auth.demoCredentials')}</h4>
+            <p>{t('auth.demoEmail')}</p>
+            <p>{t('auth.demoPassword')}</p>
+            <p className="role-hint">{t('auth.roleHint')}</p>
           </div>
         </motion.div>
 
         <div className="auth-side">
           <div className="auth-side-content">
-            <h2>Continue Your Journey</h2>
+            <h2>{t('auth.welcomeBack')}</h2>
+            <p className="auth-side-subtitle">{t('auth.journeyContinues')}</p>
             <div className="benefits">
               <div className="benefit">
-                <span className="benefit-icon">💪</span>
-                <span>Build mental resilience</span>
+                <span className="benefit-icon">🧠</span>
+                <span>{t('auth.benefits.aiSupport')}</span>
               </div>
               <div className="benefit">
-                <span className="benefit-icon">📈</span>
-                <span>Track your progress</span>
+                <span className="benefit-icon">📊</span>
+                <span>{t('auth.benefits.trackProgress')}</span>
               </div>
               <div className="benefit">
-                <span className="benefit-icon">🎯</span>
-                <span>Achieve your wellness goals</span>
+                <span className="benefit-icon">🔒</span>
+                <span>{t('auth.benefits.privateSecure')}</span>
               </div>
               <div className="benefit">
-                <span className="benefit-icon">🤝</span>
-                <span>Get personalized support</span>
+                <span className="benefit-icon">🌟</span>
+                <span>{t('auth.benefits.evidenceBased')}</span>
               </div>
             </div>
           </div>

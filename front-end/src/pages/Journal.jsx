@@ -20,8 +20,10 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, parseISO, startOfWeek, endOfWeek, isWithinInterval } from 'date-fns';
+import { useTranslation } from 'react-i18next';
 
 export default function Journal({ user }) {
+  const { t } = useTranslation();
   const [entries, setEntries] = useState([]);
   const [isWriting, setIsWriting] = useState(false);
   const [editingEntry, setEditingEntry] = useState(null);
@@ -57,16 +59,16 @@ export default function Journal({ user }) {
   ];
 
   const moodOptions = [
-    { value: 1, label: 'Very Low', icon: faFrown, color: '#f44336' },
-    { value: 2, label: 'Low', icon: faFrown, color: '#ff5722' },
-    { value: 3, label: 'Below Average', icon: faMeh, color: '#ff9800' },
-    { value: 4, label: 'Neutral', icon: faMeh, color: '#ffc107' },
-    { value: 5, label: 'Average', icon: faMeh, color: '#ffeb3b' },
-    { value: 6, label: 'Good', icon: faSmile, color: '#8bc34a' },
-    { value: 7, label: 'Very Good', icon: faSmile, color: '#4caf50' },
-    { value: 8, label: 'Great', icon: faSmile, color: '#2196f3' },
-    { value: 9, label: 'Excellent', icon: faSmile, color: '#3f51b5' },
-    { value: 10, label: 'Amazing', icon: faSmile, color: '#9c27b0' }
+    { value: 1, label: t('journal.moods.veryLow'), icon: faFrown, color: '#f44336' },
+    { value: 2, label: t('journal.moods.low'), icon: faFrown, color: '#ff5722' },
+    { value: 3, label: t('journal.moods.belowAverage'), icon: faMeh, color: '#ff9800' },
+    { value: 4, label: t('journal.moods.neutral'), icon: faMeh, color: '#ffc107' },
+    { value: 5, label: t('journal.moods.average'), icon: faMeh, color: '#ffeb3b' },
+    { value: 6, label: t('journal.moods.good'), icon: faSmile, color: '#8bc34a' },
+    { value: 7, label: t('journal.moods.veryGood'), icon: faSmile, color: '#4caf50' },
+    { value: 8, label: t('journal.moods.great'), icon: faSmile, color: '#2196f3' },
+    { value: 9, label: t('journal.moods.excellent'), icon: faSmile, color: '#3f51b5' },
+    { value: 10, label: t('journal.moods.amazing'), icon: faSmile, color: '#9c27b0' }
   ];
 
   const commonTags = [
@@ -153,7 +155,7 @@ export default function Journal({ user }) {
   };
 
   const deleteEntry = (entryId) => {
-    if (confirm('Are you sure you want to delete this journal entry?')) {
+    if (confirm(t('journal.deleteConfirm'))) {
       setEntries(prev => prev.filter(entry => entry.id !== entryId));
     }
   };
@@ -232,8 +234,8 @@ export default function Journal({ user }) {
         <div className="container">
           <div className="auth-required">
             <FontAwesomeIcon icon={faBook} size="3x" />
-            <h2>Please log in to access your personal journal</h2>
-            <p>Write, reflect, and track your mental health journey</p>
+            <h2>{t('journal.loginRequired')}</h2>
+            <p>{t('journal.loginDescription')}</p>
           </div>
         </div>
       </div>
@@ -252,9 +254,9 @@ export default function Journal({ user }) {
           <div className="header-content">
             <h1>
               <FontAwesomeIcon icon={faBook} />
-              Personal Journal
+              {t('journal.pageTitle')}
             </h1>
-            <p>Your private space for reflection, growth, and mental wellness</p>
+            <p>{t('journal.pageDescription')}</p>
           </div>
           
           <div className="header-actions">
@@ -262,21 +264,21 @@ export default function Journal({ user }) {
               className="btn btn-outline"
               onClick={() => setShowPrompts(!showPrompts)}
             >
-              Writing Prompts
+              {t('journal.writingPrompts')}
             </button>
             <button 
               className="btn btn-outline"
               onClick={exportEntries}
             >
               <FontAwesomeIcon icon={faDownload} />
-              Export
+              {t('journal.export')}
             </button>
             <button 
               className="btn btn-primary"
               onClick={startNewEntry}
             >
               <FontAwesomeIcon icon={faPlus} />
-              New Entry
+              {t('journal.newEntry')}
             </button>
           </div>
         </motion.div>
@@ -298,7 +300,7 @@ export default function Journal({ user }) {
                 exit={{ scale: 0.9, opacity: 0 }}
                 onClick={e => e.stopPropagation()}
               >
-                <h3>Writing Prompts</h3>
+                <h3>{t('journal.writingPrompts')}</h3>
                 <p>Choose a prompt to inspire your journal entry:</p>
                 <div className="prompts-grid">
                   {journalPrompts.map((prompt, index) => (
@@ -315,7 +317,7 @@ export default function Journal({ user }) {
                   className="close-prompts"
                   onClick={() => setShowPrompts(false)}
                 >
-                  Close
+                  {t('journal.close')}
                 </button>
               </motion.div>
             </motion.div>
@@ -333,7 +335,7 @@ export default function Journal({ user }) {
               transition={{ duration: 0.3 }}
             >
               <div className="editor-header">
-                <h2>{editingEntry ? 'Edit Entry' : 'New Journal Entry'}</h2>
+                <h2>{editingEntry ? t('journal.editEntry') : t('journal.newJournalEntry')}</h2>
                 <div className="editor-meta">
                   <span className="date">
                     <FontAwesomeIcon icon={faCalendar} />
@@ -345,14 +347,14 @@ export default function Journal({ user }) {
               <div className="editor-content">
                 <input
                   type="text"
-                  placeholder="Entry title..."
+                  placeholder={t('journal.titlePlaceholder')}
                   value={currentEntry.title}
                   onChange={(e) => setCurrentEntry(prev => ({ ...prev, title: e.target.value }))}
                   className="title-input"
                 />
 
                 <textarea
-                  placeholder="Start writing your thoughts..."
+                  placeholder={t('journal.contentPlaceholder')}
                   value={currentEntry.content}
                   onChange={(e) => setCurrentEntry(prev => ({ ...prev, content: e.target.value }))}
                   className="content-textarea"
@@ -364,7 +366,7 @@ export default function Journal({ user }) {
                   <div className="mood-selector">
                     <h4>
                       <FontAwesomeIcon icon={faHeart} />
-                      How are you feeling?
+                      {t('journal.howFeeling')}
                     </h4>
                     <div className="mood-options">
                       {moodOptions.map(option => (
@@ -389,13 +391,13 @@ export default function Journal({ user }) {
                   <div className="tags-selector">
                     <h4>
                       <FontAwesomeIcon icon={faTags} />
-                      Tags
+                      {t('journal.tags')}
                     </h4>
                     
                     <div className="tag-input">
                       <input
                         type="text"
-                        placeholder="Add a tag..."
+                        placeholder={t('journal.addTag')}
                         value={newTag}
                         onChange={(e) => setNewTag(e.target.value)}
                         onKeyPress={(e) => e.key === 'Enter' && addTag(newTag)}
@@ -406,7 +408,7 @@ export default function Journal({ user }) {
                     </div>
 
                     <div className="common-tags">
-                      <p>Common tags:</p>
+                      <p>{t('journal.commonTags')}</p>
                       <div className="tag-buttons">
                         {commonTags.map(tag => (
                           <button
@@ -426,7 +428,7 @@ export default function Journal({ user }) {
 
                     {currentEntry.tags.length > 0 && (
                       <div className="selected-tags">
-                        <p>Selected tags:</p>
+                        <p>{t('journal.selectedTags')}</p>
                         <div className="tag-list">
                           {currentEntry.tags.map(tag => (
                             <span key={tag} className="tag">
@@ -443,7 +445,7 @@ export default function Journal({ user }) {
                   <div className="privacy-selector">
                     <h4>
                       <FontAwesomeIcon icon={faLock} />
-                      Privacy
+                      {t('journal.privacy')}
                     </h4>
                     <label className="privacy-toggle">
                       <input
@@ -454,7 +456,7 @@ export default function Journal({ user }) {
                           isPrivate: e.target.checked 
                         }))}
                       />
-                      <span>Keep this entry private</span>
+                      <span>{t('journal.keepPrivate')}</span>
                     </label>
                   </div>
                 </div>
@@ -462,14 +464,14 @@ export default function Journal({ user }) {
 
               <div className="editor-actions">
                 <div className="word-count">
-                  Words: {currentEntry.content.split(' ').filter(word => word.length > 0).length}
+                  {t('journal.wordCount')} {currentEntry.content.split(' ').filter(word => word.length > 0).length}
                 </div>
                 <div className="action-buttons">
                   <button 
                     className="btn btn-outline"
                     onClick={() => setIsWriting(false)}
                   >
-                    Cancel
+                    {t('journal.cancel')}
                   </button>
                   <button 
                     className="btn btn-primary"
@@ -477,7 +479,7 @@ export default function Journal({ user }) {
                     disabled={!currentEntry.title.trim() || !currentEntry.content.trim()}
                   >
                     <FontAwesomeIcon icon={faSave} />
-                    {editingEntry ? 'Update Entry' : 'Save Entry'}
+                    {editingEntry ? t('journal.updateEntry') : t('journal.saveEntry')}
                   </button>
                 </div>
               </div>
@@ -497,7 +499,7 @@ export default function Journal({ user }) {
               <FontAwesomeIcon icon={faSearch} />
               <input
                 type="text"
-                placeholder="Search entries..."
+                placeholder={t('journal.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -508,7 +510,7 @@ export default function Journal({ user }) {
                 value={selectedTag}
                 onChange={(e) => setSelectedTag(e.target.value)}
               >
-                <option value="">All Tags</option>
+                <option value="">{t('journal.allTags')}</option>
                 {getAllTags().map(tag => (
                   <option key={tag} value={tag}>{tag}</option>
                 ))}
@@ -518,7 +520,7 @@ export default function Journal({ user }) {
                 value={selectedMoodFilter}
                 onChange={(e) => setSelectedMoodFilter(e.target.value)}
               >
-                <option value="">All Moods</option>
+                <option value="">{t('journal.allMoods')}</option>
                 {moodOptions.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -540,11 +542,11 @@ export default function Journal({ user }) {
             {filteredEntries.length === 0 ? (
               <div className="no-entries">
                 <FontAwesomeIcon icon={faBook} size="3x" />
-                <h3>No journal entries found</h3>
-                <p>Start writing to capture your thoughts and feelings</p>
+                <h3>{t('journal.noEntries')}</h3>
+                <p>{t('journal.startWriting')}</p>
                 <button className="btn btn-primary" onClick={startNewEntry}>
                   <FontAwesomeIcon icon={faPlus} />
-                  Write First Entry
+                  {t('journal.writeFirst')}
                 </button>
               </div>
             ) : (

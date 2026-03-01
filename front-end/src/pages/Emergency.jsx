@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faExclamationTriangle, 
@@ -17,6 +18,7 @@ import {
 import { motion } from 'framer-motion';
 
 export default function Emergency() {
+  const { t } = useTranslation();
   const [userLocation, setUserLocation] = useState(null);
   const [selectedCountry, setSelectedCountry] = useState('US');
 
@@ -270,15 +272,15 @@ export default function Emergency() {
           <div className="banner-content">
             <FontAwesomeIcon icon={faExclamationTriangle} className="warning-icon" />
             <div className="banner-text">
-              <h2>Are you in immediate danger?</h2>
-              <p>If you're having thoughts of suicide or self-harm, please reach out for help immediately.</p>
+              <h2>{t('emergency.crisisBanner.title')}</h2>
+              <p>{t('emergency.crisisBanner.description')}</p>
             </div>
             <button 
               className="emergency-btn"
               onClick={() => callEmergency('911')}
             >
               <FontAwesomeIcon icon={faAmbulance} />
-              Call Emergency
+              {t('emergency.crisisBanner.callEmergency')}
             </button>
           </div>
         </motion.div>
@@ -291,9 +293,9 @@ export default function Emergency() {
         >
           <h1>
             <FontAwesomeIcon icon={faExclamationTriangle} />
-            Crisis Support & Emergency Resources
+            {t('emergency.pageTitle')}
           </h1>
-          <p>Immediate help and support for mental health emergencies</p>
+          <p>{t('emergency.pageDescription')}</p>
         </motion.div>
 
         {/* Emergency Contacts */}
@@ -306,7 +308,7 @@ export default function Emergency() {
           <div className="section-header">
             <h2>
               <FontAwesomeIcon icon={faPhone} />
-              Emergency Contacts
+              {t('emergency.emergencyContacts')}
             </h2>
             <div className="country-selector">
               <FontAwesomeIcon icon={faGlobe} />
@@ -352,12 +354,12 @@ export default function Emergency() {
                     onClick={() => callEmergency(contact.number)}
                   >
                     <FontAwesomeIcon icon={contact.type === 'text' ? faComments : faPhone} />
-                    {contact.type === 'text' ? 'Send Text' : 'Call Now'}
+                    {contact.type === 'text' ? t('emergency.sendText') : t('emergency.callNow')}
                   </button>
                   
                   <div className="availability">
                     <FontAwesomeIcon icon={faClock} />
-                    <span>24/7 Available</span>
+                    <span>{t('emergency.available247')}</span>
                   </div>
                 </div>
               </motion.div>
@@ -374,7 +376,7 @@ export default function Emergency() {
         >
           <h2>
             <FontAwesomeIcon icon={faInfoCircle} />
-            Recognizing Crisis Signs
+            {t('emergency.crisisSigns.title')}
           </h2>
           
           <div className="signs-grid">
@@ -399,8 +401,7 @@ export default function Emergency() {
           <div className="signs-note">
             <FontAwesomeIcon icon={faInfoCircle} />
             <p>
-              If you or someone you know is showing these signs, it's important to seek help immediately. 
-              Don't wait for the situation to worsen.
+              {t('emergency.crisisSigns.seekHelp')}
             </p>
           </div>
         </motion.section>
@@ -414,7 +415,7 @@ export default function Emergency() {
         >
           <h2>
             <FontAwesomeIcon icon={faHeart} />
-            Immediate Coping Strategies
+            {t('emergency.copingStrategies.title')}
           </h2>
           
           <div className="strategies-grid">
@@ -449,7 +450,7 @@ export default function Emergency() {
         >
           <h2>
             <FontAwesomeIcon icon={faShieldAlt} />
-            Create Your Safety Plan
+            {t('emergency.safetyPlan.title')}
           </h2>
           <p>A safety plan is a personalized guide to help you navigate through difficult times.</p>
           
@@ -472,9 +473,9 @@ export default function Emergency() {
           </div>
 
           <div className="safety-plan-cta">
-            <p>Work with a mental health professional to create a personalized safety plan.</p>
+            <p>{t('emergency.safetyPlan.workWith')}</p>
             <button className="btn btn-primary">
-              Download Safety Plan Template
+              {t('emergency.safetyPlan.download')}
             </button>
           </div>
         </motion.section>
@@ -488,39 +489,39 @@ export default function Emergency() {
         >
           <h2>
             <FontAwesomeIcon icon={faHandsHelping} />
-            Additional Resources
+            {t('emergency.additionalResources.title')}
           </h2>
           
           <div className="resources-grid">
             <div className="resource-card">
-              <h3>Mental Health Professionals</h3>
-              <p>Find qualified therapists and counselors in your area</p>
+              <h3>{t('emergency.additionalResources.professionals.title')}</h3>
+              <p>{t('emergency.additionalResources.professionals.description')}</p>
               <a href="https://www.psychologytoday.com" target="_blank" rel="noopener noreferrer">
-                Find a Therapist
+                {t('emergency.additionalResources.professionals.link')}
               </a>
             </div>
             
             <div className="resource-card">
-              <h3>Support Groups</h3>
-              <p>Connect with others who understand what you're going through</p>
+              <h3>{t('emergency.additionalResources.supportGroups.title')}</h3>
+              <p>{t('emergency.additionalResources.supportGroups.description')}</p>
               <a href="https://www.nami.org" target="_blank" rel="noopener noreferrer">
-                Find Support Groups
+                {t('emergency.additionalResources.supportGroups.link')}
               </a>
             </div>
             
             <div className="resource-card">
-              <h3>Online Resources</h3>
-              <p>Educational materials and self-help tools</p>
+              <h3>{t('emergency.additionalResources.onlineResources.title')}</h3>
+              <p>{t('emergency.additionalResources.onlineResources.description')}</p>
               <a href="https://www.nimh.nih.gov" target="_blank" rel="noopener noreferrer">
-                Mental Health Information
+                {t('emergency.additionalResources.onlineResources.link')}
               </a>
             </div>
             
             <div className="resource-card">
-              <h3>Mobile Apps</h3>
-              <p>Crisis support and mental health apps for your phone</p>
+              <h3>{t('emergency.additionalResources.mobileApps.title')}</h3>
+              <p>{t('emergency.additionalResources.mobileApps.description')}</p>
               <a href="#" onClick={(e) => e.preventDefault()}>
-                Recommended Apps
+                {t('emergency.additionalResources.mobileApps.link')}
               </a>
             </div>
           </div>
